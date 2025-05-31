@@ -1,0 +1,111 @@
+<mat-tab-group [(selectedIndex)]="activeTabIndex">
+  <!-- Allergy List Tab -->
+  <mat-tab label="Allergy List">
+    <mat-card>
+      <mat-card-title>Standard Allergies</mat-card-title>
+      <div class="list-controls">
+        <mat-form-field appearance="fill" class="search-box">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="searchText" placeholder="Search allergies">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="entries-dropdown">
+          <mat-label>Show entries</mat-label>
+          <mat-select [(value)]="itemsPerPage">
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="25">25</mat-option>
+            <mat-option [value]="50">50</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <table mat-table [dataSource]="pagedAllergies" class="mat-elevation-z1">
+        <!-- Debug info -->
+        <tr *ngIf="pagedAllergies.length === 0">
+          <td colspan="4" style="text-align: center; padding: 20px;">
+            No allergies found. Total allergies: {{allergies.length}}
+          </td>
+        </tr>
+
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Allergy Name</th>
+          <td mat-cell *matCellDef="let allergy">{{ allergy?.allergyName || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="code">
+          <th mat-header-cell *matHeaderCellDef>Allergy Code</th>
+          <td mat-cell *matCellDef="let allergy">{{ allergy?.allergyCode || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="type">
+          <th mat-header-cell *matHeaderCellDef>Allergy Type</th>
+          <td mat-cell *matCellDef="let allergy">{{ allergy?.allergyType || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let allergy">
+            <button mat-icon-button color="primary" (click)="viewAllergy(allergy)" matTooltip="View">
+              <mat-icon>visibility</mat-icon>
+            </button>
+            <button mat-icon-button color="warn" (click)="deleteAllergy(allergy)" matTooltip="Delete">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div class="pagination-controls">
+        <span>{{ getPaginationRange() }}</span>
+        <div class="pagination-buttons">
+          <button mat-button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+          <button mat-button *ngFor="let page of pages"
+                  (click)="goToPage(page)"
+                  [color]="currentPage === page ? 'primary' : undefined">
+            {{ page }}
+          </button>
+          <button mat-button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+        </div>
+      </div>
+    </mat-card>
+  </mat-tab>
+
+  <!-- Add Allergy Tab -->
+  <mat-tab label="Add Allergy">
+    <mat-card class="allergy-form-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon color="primary" style="vertical-align: middle;">add_circle</mat-icon>
+          Add New Allergy
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form (ngSubmit)="onSubmit()" #allergyForm="ngForm" class="allergy-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Allergy Name</mat-label>
+            <input matInput name="allergyName" [(ngModel)]="newAllergy.allergyName" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Allergy Code</mat-label>
+            <input matInput name="allergyCode" [(ngModel)]="newAllergy.allergyCode" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Allergy Type</mat-label>
+            <input matInput name="allergyType" [(ngModel)]="newAllergy.allergyType" required>
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" class="submit-btn">
+            <mat-icon>add</mat-icon>
+            Add Allergy
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>
+

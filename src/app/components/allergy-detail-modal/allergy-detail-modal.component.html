@@ -1,0 +1,19 @@
+<div class="modal-overlay" *ngIf="isVisible">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2>Allergy Details</h2>
+      <button class="close-btn" (click)="hide()">×</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="allergy">
+        <p><strong>Name:</strong> {{ allergy.name }}</p>
+        <p><strong>Code:</strong> {{ allergy.code }}</p>
+        <p><strong>Type:</strong> {{ allergy.type }}</p>
+        <!-- Add more details here if available in the Allergy interface -->
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button (click)="hide()">Close</button>
+    </div>
+  </div>
+</div> 

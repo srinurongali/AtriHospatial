@@ -1,0 +1,113 @@
+.header-container {
+  display: flex;
+  align-items: center;
+  padding: 15px 30px;
+  background: linear-gradient(135deg, #0288d1 0%, #03a9f4 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.header-container img.logo {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  margin-right: 20px;
+  background-color: transparent;
+}
+
+.horizontal-menu {
+  margin-left: 40px;
+}
+
+.horizontal-menu ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 30px;
+}
+
+.horizontal-menu li {
+  margin: 0;
+}
+
+.horizontal-menu a {
+  color: #ffffff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 8px 0;
+  position: relative;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.horizontal-menu a:hover {
+  color: #b3e5fc;
+}
+
+.horizontal-menu a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: 0;
+  left: 0;
+  background-color: #b3e5fc;
+  transition: width 0.3s ease;
+}
+
+.horizontal-menu a:hover::after {
+  width: 100%;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-content {
+  position: absolute;
+  background-color: #ffffff;
+  min-width: 200px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border-radius: 4px;
+  padding: 8px 0;
+  margin-top: 10px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  display: block !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+.dropdown-content li {
+  margin: 0;
+  display: block;
+  width: 100%;
+}
+
+.dropdown-content a {
+  color: #0288d1;
+  padding: 12px 20px;
+  text-decoration: none;
+  display: block;
+  font-size: 14px;
+  transition: background-color 0.2s ease;
+}
+
+.dropdown-content a:hover {
+  background-color: #e1f5fe;
+  color: #0288d1;
+}
+
+/* Add margin to the main content to account for fixed header */
+:host {
+  display: block;
+  margin-top: 70px;
+}

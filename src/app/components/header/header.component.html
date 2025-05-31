@@ -1,0 +1,16 @@
+<div class="header-container">
+  <img src="assets/atribiz.logo.png" alt="AtriBiz Logo" class="logo">
+  <nav class="horizontal-menu">
+    <ul>
+      <li class="dropdown">
+        <a href="#" (click)="toggleSetupsDropdown(); $event.preventDefault()">Setups</a>
+        <ul class="dropdown-content" *ngIf="isSetupsDropdownVisible">
+          <li><a (click)="navigateToAllergySetup(); $event.preventDefault()">Allergy Setup</a></li>
+          <li><a (click)="navigateToProcedureSetup(); $event.preventDefault()">Procedure Setup</a></li>
+          <!-- Add more setup options here -->
+        </ul>
+      </li>
+      <!-- Add more menu items here -->
+    </ul>
+  </nav>
+</div>
