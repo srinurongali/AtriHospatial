@@ -167,11 +167,6 @@ form {
   border-radius: 6px;
   background-color: #f0f7ff;
 }
-.action-buttons {
-  display: flex;
-  gap: 12px; /* Space between View, Edit, Delete buttons */
-  align-items: center;
-}
 
 .full-width {
   width: 100%;
@@ -257,7 +252,7 @@ button[mat-icon-button].mat-warn:hover {
   }
 }
 
-.allergy-form-card {
+.procedure-form-card {
   background: #f8fbff;
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(66, 165, 245, 0.08);
@@ -265,7 +260,7 @@ button[mat-icon-button].mat-warn:hover {
   margin-top: 12px;
 }
 
-.allergy-form {
+.procedure-form {
   display: flex;
   flex-direction: column;
   gap: 18px;
@@ -283,4 +278,4 @@ button[mat-icon-button].mat-warn:hover {
   letter-spacing: 0.5px;
   border-radius: 6px;
   box-shadow: 0 2px 6px rgba(66, 165, 245, 0.10);
-}
+} 

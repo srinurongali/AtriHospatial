@@ -1,19 +1,22 @@
-<div class="modal-overlay" *ngIf="isVisible">
+<div *ngIf="isVisible" class="modal-overlay" role="dialog" aria-labelledby="modalTitle" aria-hidden="false">
   <div class="modal-content">
     <div class="modal-header">
-      <h2>Allergy Details</h2>
-      <button class="close-btn" (click)="hide()">×</button>
+      <h2 id="modalTitle">Allergy Details</h2>
+      <button aria-label="Close" (click)="hide()" class="close-btn">×</button>
     </div>
     <div class="modal-body">
       <div *ngIf="allergy">
-        <p><strong>Name:</strong> {{ allergy.name }}</p>
-        <p><strong>Code:</strong> {{ allergy.code }}</p>
-        <p><strong>Type:</strong> {{ allergy.type }}</p>
-        <!-- Add more details here if available in the Allergy interface -->
+        <p><strong>Name:</strong> {{ allergy.allergyName }}</p>
+        <p><strong>Code:</strong> {{ allergy.allergyCode }}</p>
+        <p><strong>Type:</strong> {{ allergy.allergyType }}</p>
+        <p *ngIf="allergy.statusId"><strong>Status:</strong> {{ allergy.statusId }}</p>
+        <p *ngIf="allergy.addedBy"><strong>Added By:</strong> {{ allergy.addedBy }}</p>
+        <p *ngIf="allergy.addedIp"><strong>Added IP:</strong> {{ allergy.addedIp }}</p>
+        <p *ngIf="allergy.addedOn"><strong>Added On:</strong> {{ allergy.addedOn | date }}</p>
       </div>
     </div>
     <div class="modal-footer">
       <button (click)="hide()">Close</button>
     </div>
   </div>
-</div> 
+</div>

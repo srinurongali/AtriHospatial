@@ -16,6 +16,7 @@
             "outputPath": "dist/atri",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "server": "src/main.server.ts",
             "polyfills": [
               "zone.js"
             ],
@@ -58,6 +59,7 @@
           "options": {
             "buildTarget": "Atri:build",
             "proxyConfig": "proxy.conf.json"
+        
           },
           "configurations": {
             "production": {

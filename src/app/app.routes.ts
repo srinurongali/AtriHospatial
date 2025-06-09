@@ -1,8 +1,9 @@
 import { Routes } from '@angular/router';
 import { StandardAllergyComponent } from './components/standard-allergy/standard-allergy.component';
-import { StandardProcedureComponent } from './components/standard-procedure/standard-procedure.component';
+import { StandardProcedureComponentsComponent } from './components/standard-procedure-components/standard-procedure-components.component';
 
 export const routes: Routes = [
   { path: 'standard-allergy', component: StandardAllergyComponent },
-  { path: 'standard-procedure', component: StandardProcedureComponent },
+  { path: 'standard-procedure', component: StandardProcedureComponentsComponent },
+  
 ];

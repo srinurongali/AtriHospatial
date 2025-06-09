@@ -1,123 +1,84 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, catchError, throwError, of, tap } from 'rxjs';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { catchError } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 export interface Allergy {
+  allergyId?: number | string;
   allergyName?: string;
   allergyCode?: string;
-  allergyType?:string;
+  allergyType?: string;
   statusId?: number;
   addedBy?: string;
   addedIp?: string;
   addedOn?: Date | string;
-  allergyId?: number | string;
-  name?: string;
-  code?: string;
-  type?: string;
-  id?: number | string;
-  allergy_name?: string;
-  allergy_code?: string;
-  allergy_type?: string;
-  allergy_id?: number | string;
-  added_by?: string;
-  added_ip?: string;
-  added_on?: Date | string;
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class AllergyService {
-  private apiUrl = '/api/allergies';
-  private storageKey = 'allergies';
+  private apiUrl = `${environment.apiUrl}/allergies`;
 
-  constructor(private http: HttpClient) {
-    console.log('AllergyService initialized with API URL:', this.apiUrl);
-  }
+  private httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    }),
+  };
 
-  private getStoredAllergies(): Allergy[] {
-    const stored = localStorage.getItem(this.storageKey);
-    console.log('Getting stored allergies from localStorage:', stored);
-    return stored ? JSON.parse(stored) : [];
-  }
+  constructor(private http: HttpClient) {}
 
-  private setStoredAllergies(allergies: Allergy[]): void {
-    console.log('Setting allergies in localStorage:', allergies);
-    localStorage.setItem(this.storageKey, JSON.stringify(allergies));
-  }
-
+  // ✅ Add this method
   getAllergies(): Observable<Allergy[]> {
-    console.log('Fetching allergies from API:', this.apiUrl);
-    return this.http.get<Allergy[]>(this.apiUrl).pipe(
-      tap(data => {
-        console.log('API response received:', JSON.stringify(data, null, 2));
-      }),
-      catchError((error) => {
-        console.log('API error, using local storage as fallback:', error);
-        const storedData = this.getStoredAllergies();
-        console.log('Local storage data:', storedData);
-        return of(storedData);
-      })
+    return this.http.get<Allergy[]>(`${this.apiUrl}/all`, this.httpOptions).pipe(
+      catchError(this.handleError)
     );
   }
 
   addAllergy(allergy: Allergy): Observable<Allergy> {
-    console.log('Adding new allergy:', JSON.stringify(allergy, null, 2));
-    return this.http.post<Allergy>(`${this.apiUrl}/Create`, allergy).pipe(
-      tap(response => {
-        console.log('Add allergy API response:', JSON.stringify(response, null, 2));
-      }),
-      catchError((error) => {
-        console.log('API error, using local storage as fallback:', error);
-        const allergies = this.getStoredAllergies();
-        const newAllergy = { ...allergy, allergyId: Date.now().toString() };
-        allergies.push(newAllergy);
-        this.setStoredAllergies(allergies);
-        return of(newAllergy);
-      })
+    const formatted = {
+      allergyName: allergy.allergyName,
+      allergyCode: allergy.allergyCode,
+      allergyType: allergy.allergyType,
+      statusId: allergy.statusId,
+      addedBy: allergy.addedBy,
+      addedIp: allergy.addedIp,
+    };
+    return this.http.post<Allergy>(`${this.apiUrl}/create`, formatted, this.httpOptions).pipe(
+      catchError(this.handleError)
     );
   }
-
-  deleteAllergy(identifier: number | string): Observable<void> {
-    console.log('Deleting allergy with identifier:', identifier);
-    return this.http.delete<void>(`${this.apiUrl}/${identifier}`).pipe(
-      tap(() => {
-        console.log('Delete allergy API call successful');
-      }),
-      catchError((error) => {
-        console.log('API error, using local storage as fallback:', error);
-        const allergies = this.getStoredAllergies();
-        const index = allergies.findIndex(a => a.allergyId === identifier);
-        if (index > -1) {
-          allergies.splice(index, 1);
-          this.setStoredAllergies(allergies);
-        }
-        return of(void 0);
-      })
-    );
+   updateAllergy(allergy: Allergy): Observable<any> {
+  if (!allergy.allergyId) {
+    return throwError(() => new Error('Allergy ID is required for update.'));
   }
+  return this.http.put(`${this.apiUrl}/update`, allergy, this.httpOptions).pipe(
+    catchError(this.handleError)
+  );
+}
 
-  updateAllergy(allergy: Allergy): Observable<Allergy> {
-    console.log('Updating allergy:', JSON.stringify(allergy, null, 2));
-    return this.http.put<Allergy>(`${this.apiUrl}/update`, allergy).pipe(
-      tap(response => {
-        console.log('Update allergy API response:', JSON.stringify(response, null, 2));
-      }),
-      catchError((error) => {
-        console.log('API error, using local storage as fallback:', error);
-        const allergies = this.getStoredAllergies();
-        const index = allergies.findIndex(a => a.allergyId === allergy.allergyId);
-        if (index > -1) {
-          allergies[index] = allergy;
-          this.setStoredAllergies(allergies);
-        }
-        return of(allergy);
-      })
-    );
-  }
 
-  private handleError(error: any): Observable<never> {
-    console.error('An error occurred:', error);
-    return throwError(() => new Error(error.message || 'Backend error'));
+  deleteAllergy(id: number | string): Observable<void> {
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    'X-Deleted-By': 'admin',
+    'X-Deleted-IP': '192.168.1.163'
+  });
+  
+
+
+  return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, { headers }).pipe(
+    catchError(this.handleError)
+  );
+}
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    const message = error.error instanceof ErrorEvent
+      ? error.error.message
+      : `Server returned code ${error.status}`;
+    return throwError(() => new Error(message));
   }
 }
