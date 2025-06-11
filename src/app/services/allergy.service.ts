@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';  // ⬅️ make sure to import 'map'
 import { environment } from '../../environments/environment';
 
 export interface Allergy {
@@ -30,9 +30,17 @@ export class AllergyService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Add this method
+  // ✅ Get ALL allergies
   getAllergies(): Observable<Allergy[]> {
     return this.http.get<Allergy[]>(`${this.apiUrl}/all`, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  // ✅ Get only ACTIVE (statusId = 1) allergies
+  getActiveAllergies(): Observable<Allergy[]> {
+    return this.http.get<Allergy[]>(`${this.apiUrl}/all`, this.httpOptions).pipe(
+      map(allergies => allergies.filter(allergy => allergy.statusId === 1)),
       catchError(this.handleError)
     );
   }
@@ -44,36 +52,37 @@ export class AllergyService {
       allergyType: allergy.allergyType,
       statusId: allergy.statusId,
       addedBy: allergy.addedBy,
-      addedIp: allergy.addedIp,
+      addedOn: allergy.addedOn,
+      addedIp: allergy.addedIp
     };
     return this.http.post<Allergy>(`${this.apiUrl}/create`, formatted, this.httpOptions).pipe(
       catchError(this.handleError)
     );
   }
-   updateAllergy(allergy: Allergy): Observable<any> {
-  if (!allergy.allergyId) {
-    return throwError(() => new Error('Allergy ID is required for update.'));
+
+  updateAllergy(allergy: Allergy): Observable<any> {
+    if (!allergy.allergyId) {
+      return throwError(() => new Error('Allergy ID is required for update.'));
+    }
+    return this.http.put(`${this.apiUrl}/update`, allergy, this.httpOptions).pipe(
+      catchError(this.handleError)
+    );
   }
-  return this.http.put(`${this.apiUrl}/update`, allergy, this.httpOptions).pipe(
-    catchError(this.handleError)
-  );
-}
 
+  deleteAllergy(id: number | string): Observable<any> {
+    const url = `${this.apiUrl}/delete/${id}`;
+    const body = { allergyId: id };
 
-  deleteAllergy(id: number | string): Observable<void> {
-  const headers = new HttpHeaders({
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-    'X-Deleted-By': 'admin',
-    'X-Deleted-IP': '192.168.1.163'
-  });
-  
-
-
-  return this.http.delete<void>(`${this.apiUrl}/delete/${id}`, { headers }).pipe(
-    catchError(this.handleError)
-  );
-}
+    return this.http.request('DELETE', url, {
+      body,
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+      })
+    }).pipe(
+      catchError(this.handleError)
+    );
+  }
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     const message = error.error instanceof ErrorEvent

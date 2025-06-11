@@ -67,7 +67,7 @@ export class StandardAllergyComponent implements OnInit {
   }
 
   loadAllergies(): void {
-    this.allergyService.getAllergies().pipe(
+    this.allergyService.getActiveAllergies().pipe(
       tap((data: Allergy[]) => {
         this.allergies = data.map((item: Allergy) => ({
           allergyName: item.allergyName || '',
@@ -144,7 +144,10 @@ export class StandardAllergyComponent implements OnInit {
 
   onSubmit(): void {
     if (this.newAllergy.allergyName && this.newAllergy.allergyCode) {
+          this.newAllergy.addedOn = this.formatDateWithoutMilliseconds(new Date());
+
       if (this.isEditMode && this.newAllergy.allergyId) {
+
         this.allergyService.updateAllergy(this.newAllergy).subscribe({
           next: () => {
             this.snackBar.open('✅ Allergy updated successfully!', 'Close', {
@@ -209,8 +212,7 @@ export class StandardAllergyComponent implements OnInit {
     const end = Math.min(start + this.itemsPerPage - 1, total);
     return `Showing ${start} to ${end} of ${total} entries`;
   }
-
- deleteAllergy(allergy: Allergy): void {
+deleteAllergy(allergy: Allergy): void {
   if (!allergy || !allergy.allergyId) {
     this.snackBar.open('⚠️ Invalid allergy data.', 'Close', {
       duration: 3000,
@@ -219,24 +221,32 @@ export class StandardAllergyComponent implements OnInit {
     return;
   }
 
-  const confirmDelete = confirm(`Are you sure you want to delete "${allergy.allergyName}"?`);
+  const confirmDelete = confirm(`Are you sure you want to deactivate "${allergy.allergyName}"?`);
   if (!confirmDelete) return;
 
   this.allergyService.deleteAllergy(allergy.allergyId).subscribe({
     next: () => {
-      this.snackBar.open('✅ Allergy deleted successfully.', 'Close', {
+      this.snackBar.open('✅ Allergy deactivated successfully.', 'Close', {
         duration: 3000,
         verticalPosition: 'top'
       });
-      this.loadAllergies();
+      this.loadAllergies(); // ✅ refreshes the list
     },
     error: (error) => {
-      console.error('Error deleting allergy:', error);
-      this.snackBar.open(`❌ Failed to delete allergy: ${error.message || error.statusText || 'Unknown error'}`, 'Close', {
+      console.error('Error deactivating allergy:', error);
+      this.snackBar.open(`❌ Failed to deactivate allergy: ${error.message || error.statusText || 'Unknown error'}`, 'Close', {
         duration: 5000,
         verticalPosition: 'top'
       });
     }
   });
 }
+formatDateWithoutMilliseconds(date: Date): string {
+  const pad = (n: number) => n.toString().padStart(2, '0');
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
+
+
+
+
+}  
