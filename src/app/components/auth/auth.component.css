@@ -1,0 +1,111 @@
+.auth-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: #2c3e50; /* Dark blue background */
+    font-family: Arial, sans-serif;
+  }
+  
+  .auth-form-card {
+    background: rgba(0, 0, 0, 0.4); /* Semi-transparent overlay */
+    padding: 40px;
+    border-radius: 10px;
+    width: 350px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  
+  .auth-tabs {
+    display: flex;
+    margin-bottom: 30px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  }
+  
+  .auth-tabs .tab {
+    flex-grow: 1;
+    padding: 10px 0;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.6);
+    transition: color 0.3s ease;
+  }
+  
+  .auth-tabs .tab.active {
+    color: #fff;
+    border-bottom: 2px solid #3498db; /* Blue accent for active tab */
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group input {
+    width: calc(100% - 20px);
+    padding: 12px 10px;
+    border: none;
+    border-radius: 25px;
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 16px;
+    outline: none;
+    transition: background 0.3s ease;
+  }
+  
+  .form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+  }
+  
+  .form-group input:focus {
+    background: rgba(255, 255, 255, 0.3);
+  }
+  
+  .form-options {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+  
+  .form-options input[type="checkbox"] {
+    margin-right: 8px;
+    accent-color: #3498db;
+  }
+  
+  .btn-primary {
+    background: #3498db; /* Blue button */
+    color: #fff;
+    padding: 12px 0;
+    border: none;
+    border-radius: 25px;
+    width: 100%;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background: #2980b9;
+  }
+  
+  .forgot-password {
+    margin-top: 20px;
+  }
+  
+  .forgot-password a {
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+  }
+  
+  .forgot-password a:hover {
+    color: #fff;
+  }
+  
+  .hidden {
+    display: none;
+  } 

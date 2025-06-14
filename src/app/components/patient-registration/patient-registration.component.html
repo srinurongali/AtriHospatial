@@ -1,0 +1,200 @@
+<div class="patient-registration-container">
+  <mat-card class="registration-card">
+    <mat-card-header>
+      <mat-card-title class="form-title">Patient Registration</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form #patientForm="ngForm" (ngSubmit)="onSubmit(patientForm)">
+
+        <!-- Name Section -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Title</mat-label>
+            <mat-select name="title" ngModel required>
+              <mat-option *ngFor="let title of ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr', 'Master', 'Baby']" [value]="title">{{ title }}</mat-option>
+            </mat-select>
+            <mat-error *ngIf="patientForm.submitted && !patientForm.controls['title']?.valid">
+              Title is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>First Name</mat-label>
+            <input matInput name="firstName" ngModel required />
+            <mat-error *ngIf="patientForm.submitted && !patientForm.controls['firstName']?.valid">
+              First name is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Last Name</mat-label>
+            <input matInput name="lastName" ngModel />
+          </mat-form-field>
+        </div>
+
+        <!-- DOB and Age -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Date of Birth</mat-label>
+            <input matInput type="date" name="dob" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Age (Years)</mat-label>
+            <input matInput type="number" name="ageYears" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Age (Months)</mat-label>
+            <input matInput type="number" name="ageMonths" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Age (Days)</mat-label>
+            <input matInput type="number" name="ageDays" ngModel />
+          </mat-form-field>
+        </div>
+
+        <!-- Gender and Mobile -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Gender</mat-label>
+            <mat-select name="gender" ngModel required>
+              <mat-option value="Male">Male</mat-option>
+              <mat-option value="Female">Female</mat-option>
+              <mat-option value="Other">Other</mat-option>
+            </mat-select>
+            <mat-error *ngIf="patientForm.submitted && !patientForm.controls['gender']?.valid">
+              Gender is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Mobile No</mat-label>
+            <input matInput name="mobileNo" ngModel required pattern="[0-9]{10}" />
+            <mat-error *ngIf="patientForm.submitted && !patientForm.controls['mobileNo']?.valid">
+              Mobile number is required (10 digits)
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Address -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Country</mat-label>
+            <input matInput name="country" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>State</mat-label>
+            <input matInput name="state" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>City</mat-label>
+            <input matInput name="city" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Village</mat-label>
+            <input matInput name="village" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field full-width">
+            <mat-label>Address</mat-label>
+            <textarea matInput name="address" ngModel required></textarea>
+            <mat-error *ngIf="patientForm.submitted && !patientForm.controls['address']?.valid">
+              Address is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Organization & Occupation -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Organization</mat-label>
+            <mat-select name="organization" ngModel>
+              <mat-option *ngFor="let org of organizations" [value]="org">{{ org }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Occupation</mat-label>
+            <mat-select name="occupation" ngModel>
+              <mat-option *ngFor="let occ of occupations" [value]="occ">{{ occ }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <!-- Miscellaneous -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>ID Proof Type</mat-label>
+            <input matInput name="idProofType" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>ID Proof Number</mat-label>
+            <input matInput name="idProofNumber" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Care By</mat-label>
+            <input matInput name="careBy" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Parent or Husband Name</mat-label>
+            <input matInput name="parentOrHusbandName" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Religion</mat-label>
+            <input matInput name="religion" ngModel />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Marital Status</mat-label>
+            <mat-select name="maritalStatus" ngModel>
+              <mat-option value="Single">Single</mat-option>
+              <mat-option value="Married">Married</mat-option>
+              <mat-option value="Widowed">Widowed</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Blood Group</mat-label>
+            <mat-select name="bloodGroup" ngModel>
+              <mat-option value="A+">A+</mat-option>
+              <mat-option value="A-">A-</mat-option>
+              <mat-option value="B+">B+</mat-option>
+              <mat-option value="B-">B-</mat-option>
+              <mat-option value="AB+">AB+</mat-option>
+              <mat-option value="AB-">AB-</mat-option>
+              <mat-option value="O+">O+</mat-option>
+              <mat-option value="O-">O-</mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Health Issue</mat-label>
+            <textarea matInput name="healthIssue" ngModel></textarea>
+          </mat-form-field>
+        </div>
+
+        <!-- Checkboxes -->
+        <mat-checkbox name="smsNotification" ngModel>SMS Notification</mat-checkbox>
+        <mat-checkbox name="walkIn" ngModel>Walk-in Patient</mat-checkbox>
+
+        <!-- Submit -->
+        <div class="form-actions">
+          <button mat-raised-button color="primary" type="submit">
+            Register Patient
+          </button>
+        </div>
+
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

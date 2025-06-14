@@ -10,6 +10,17 @@
           <!-- Add more setup options here -->
         </ul>
       </li>
+
+      <li class="dropdown">
+        <a href="#" (click)="toggleServicesDropdown(); $event.preventDefault()">Services</a>
+        <ul class="dropdown-content" *ngIf="isServicesDropdownVisible">
+          <li><a (click)="navigateToPatientManagement(); $event.preventDefault()">Patient Registration</a></li>
+          <li><a (click)="navigateToAppointmentScheduling(); $event.preventDefault()">Appointment Scheduling</a></li>
+          <li><a (click)="navigateToBillingInsurance(); $event.preventDefault()">Billing & Insurance</a></li>
+          <li><a (click)="navigateToReportsAnalytics(); $event.preventDefault()">Reports & Analytics</a></li>
+          <!-- Add more service options here -->
+        </ul>
+      </li>
       <!-- Add more menu items here -->
     </ul>
   </nav>

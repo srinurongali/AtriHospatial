@@ -1,0 +1,36 @@
+.patient-registration-container {
+  max-width: 1000px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.registration-card {
+  padding: 20px;
+}
+
+.form-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.form-field {
+  flex: 1 1 30%;
+  min-width: 220px;
+}
+
+.full-width {
+  flex: 1 1 100%;
+}
+
+.form-actions {
+  margin-top: 20px;
+  text-align: right;
+}
+
+
+
+
+
+
