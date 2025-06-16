@@ -12,7 +12,7 @@
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Title</mat-label>
             <mat-select name="title" ngModel required>
-              <mat-option *ngFor="let title of ['Mr', 'Mrs', 'Miss', 'Ms', 'Dr', 'Master', 'Baby']" [value]="title">{{ title }}</mat-option>
+              <mat-option *ngFor="let title of ['Mr', 'Mrs', 'Miss']" [value]="title">{{ title }}</mat-option>
             </mat-select>
             <mat-error *ngIf="patientForm.submitted && !patientForm.controls['title']?.valid">
               Title is required
@@ -79,7 +79,7 @@
           </mat-form-field>
         </div>
 
-        <!-- Address -->
+        <!-- Address Section -->
         <div class="form-section">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Country</mat-label>
@@ -95,14 +95,17 @@
             <mat-label>City</mat-label>
             <input matInput name="city" ngModel />
           </mat-form-field>
+        </div>
 
-          <mat-form-field appearance="outline" class="form-field">
+        <!-- Village + Address with custom widths -->
+        <div class="form-section">
+          <mat-form-field appearance="outline" class="form-field village">
             <mat-label>Village</mat-label>
             <input matInput name="village" ngModel />
           </mat-form-field>
 
-          <mat-form-field appearance="outline" class="form-field full-width">
-            <mat-label>Address</mat-label>
+          <mat-form-field appearance="outline" class="form-field address">
+            <mat-label>Address*</mat-label>
             <textarea matInput name="address" ngModel required></textarea>
             <mat-error *ngIf="patientForm.submitted && !patientForm.controls['address']?.valid">
               Address is required
@@ -170,10 +173,7 @@
               <mat-option value="A-">A-</mat-option>
               <mat-option value="B+">B+</mat-option>
               <mat-option value="B-">B-</mat-option>
-              <mat-option value="AB+">AB+</mat-option>
-              <mat-option value="AB-">AB-</mat-option>
-              <mat-option value="O+">O+</mat-option>
-              <mat-option value="O-">O-</mat-option>
+             
             </mat-select>
           </mat-form-field>
 

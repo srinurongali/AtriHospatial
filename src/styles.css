@@ -36,3 +36,12 @@ body::before {
     pointer-events: none;
     z-index: -1;
 }
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #aaa;
+  border-color: #aaa;
+}
+
+::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #007bff;
+  border-color: #007bff;
+}

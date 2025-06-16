@@ -1,36 +1,154 @@
 .patient-registration-container {
-  max-width: 1000px;
-  margin: 20px auto;
-  padding: 20px;
+  background-color: #1e2a36;
+  min-height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 32px;
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .registration-card {
-  padding: 20px;
+  background-color: #2c3e50;
+  color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  padding: 16px;
+  width: 100%;
+  max-width: 900px;
+  border: 1px solid #00acc1;
+}
+
+.section-title {
+  color: #e91e63;
+  margin-bottom: 16px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
 .form-section {
   display: flex;
   flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 12px;
+  margin-bottom: 16px;
 }
 
 .form-field {
+  flex: 1 1 180px;
+  min-width: 180px;
+  max-width: 280px;
+}
+
+/* Village + Address Custom Width */
+.form-field.village {
   flex: 1 1 30%;
-  min-width: 220px;
+  max-width: 30%;
+}
+.form-field.address {
+  flex: 1 1 68%;
+  max-width: 68%;
 }
 
 .full-width {
   flex: 1 1 100%;
 }
 
-.form-actions {
-  margin-top: 20px;
-  text-align: right;
+/* Fix field alignment */
+mat-form-field {
+  width: 100%;
+  font-size: 13px;
+  box-sizing: border-box;
+  position: relative;
 }
 
+/* Remove border radius from all form fields */
+mat-form-field.mat-form-field {
+  background-color: #34495e;
+  border-radius: 0 !important;
+  padding-left: 8px;
+  transition: background-color 0.3s;
+}
 
+.mat-form-field-appearance-outline .mat-form-field-outline,
+.mat-form-field-outline-start,
+.mat-form-field-outline-end {
+  color: #b0bec5;
+  border-radius: 0 !important;
+  border-width: 1px;
+}
 
+/* Remove border radius on hover/focus glow */
+mat-form-field:hover .mat-form-field-outline,
+mat-form-field.mat-focused .mat-form-field-outline {
+  box-shadow: inset 0 0 6px 2px lightblue;
+  border-radius: 0 !important;
+  transition: box-shadow 0.3s ease;
+}
 
+input.mat-input-element,
+textarea.mat-input-element,
+.mat-select-trigger {
+  color: #ffffff;
+  font-size: 13px;
+  background-color: transparent;
+  border-radius: 0 !important;
+  padding: 8px 12px;
+  height: 40px;
+  line-height: 40px;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
 
+textarea.mat-input-element {
+  height: auto;
+  min-height: 60px;
+  line-height: normal;
+}
 
+.mat-select {
+  height: 40px;
+  line-height: 40px;
+  border-radius: 0 !important;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  padding-left: 12px;
+}
+
+mat-label {
+  color: #b0bec5 !important;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+mat-error {
+  color: #ff5252 !important;
+  font-size: 12px;
+}
+
+mat-checkbox {
+  color: #ffffff;
+  margin-right: 16px;
+  font-size: 14px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+button[type="submit"] {
+  background-color: #0288d1;
+  color: white;
+  font-weight: bold;
+  padding: 6px 24px;
+  font-size: 14px;
+  border-radius: 0;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #0277bd;
+}
