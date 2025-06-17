@@ -36,12 +36,47 @@ body::before {
     pointer-events: none;
     z-index: -1;
 }
-::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
-  color: #aaa;
-  border-color: #aaa;
+
+/* Global styles for Angular Material components */
+
+/* Ensure the dropdown panel has a dark background and white text */
+html {
+  --mat-select-panel-background-color: #34495e;
+  --mat-option-label-text-color: white;
+  --mat-select-enabled-trigger-text-color: white;
+  --mdc-outlined-text-field-outline-color: white;
 }
 
-::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
-  color: #007bff;
-  border-color: #007bff;
+/* Specific styles for the dropdown panel overlay */
+.cdk-overlay-pane .mat-mdc-select-panel {
+  background-color: var(--mat-select-panel-background-color) !important;
+}
+
+/* Style for individual options within the dropdown */
+.cdk-overlay-pane .mat-mdc-option {
+  color: var(--mat-option-label-text-color) !important;
+}
+
+/* Style for the selected value in the dropdown trigger */
+.mat-mdc-select-value {
+  color: var(--mat-select-enabled-trigger-text-color) !important;
+}
+
+/* Style for the outline of the select field */
+.mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
+  color: var(--mdc-outlined-text-field-outline-color) !important;
+}
+
+/* Style for the hover/focus state of options */
+.cdk-overlay-pane .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
+.cdk-overlay-pane .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  color: white !important;
+}
+
+.cdk-overlay-pane .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background-color: #0277bd !important; /* Highlight color for selected/hovered option */
+}
+
+.cdk-overlay-pane .mat-mdc-option:hover:not(.mdc-list-item--selected):not(.mdc-list-item--disabled) {
+  background-color: #4a637a !important; /* Hover background for unselected options */
 }

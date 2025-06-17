@@ -1,0 +1,30 @@
+<div class="patient-list-container">
+  <mat-card class="list-card">
+    <mat-card-title>🧾 Registered Patients</mat-card-title>
+
+    <div class="patient-table">
+      <div class="table-header">
+        <div>UMR No</div>
+        <div>Name</div>
+        <div>DOB</div>
+        <div>Mobile No</div>
+        <div>ID Proof</div>
+        <div>Address</div>
+      </div>
+
+      <div *ngFor="let patient of patients" class="table-row">
+        <div>{{ patient.umrNumber }}</div>
+        <div>{{ patient.title }} {{ patient.firstName }} {{ patient.lastName }}</div>
+        <div>{{ patient.dob | date }}</div>
+        <div>{{ patient.mobileNo }}</div>
+        <div>{{ patient.idProofNumber }}</div>
+        <div>{{ patient.address }}</div>
+      </div>
+    </div>
+
+    <div class="action-buttons">
+      <button mat-raised-button color="accent" routerLink="/register">⬅️ Back</button>
+      <button mat-raised-button color="primary" routerLink="/appointment">📅 Appointment Booking</button>
+    </div>
+  </mat-card>
+</div>

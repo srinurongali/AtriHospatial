@@ -12,6 +12,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-patient-registration',
@@ -35,7 +36,10 @@ export class PatientRegistrationComponent {
   organizations = ['Apollo Hospitals', 'KIMS', 'Sunshine', 'AIIMS'];
   occupations = ['Engineer', 'Doctor', 'Farmer', 'Teacher'];
 
-  constructor(private snackBar: MatSnackBar, private patientService: PatientService) {}
+  constructor(private snackBar: MatSnackBar,
+     private patientService: PatientService,
+        private router: Router
+) {}
 
   onSubmit(form: NgForm): void {
     if (form.valid) {
@@ -55,6 +59,13 @@ export class PatientRegistrationComponent {
             verticalPosition: 'top'
           });
           form.resetForm();
+
+          // navigate to patient list after slightly dely 
+
+
+          setTimeout(()=>{
+            this.router.navigate(['/patient-list']);
+          }, 500);
         },
         error: () => {
           this.snackBar.open('❌ Failed to save patient data', 'Close', {

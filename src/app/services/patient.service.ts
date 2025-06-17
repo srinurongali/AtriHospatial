@@ -36,11 +36,17 @@ export interface Patient {
 
 @Injectable({ providedIn: 'root' })
 export class PatientService {
-  private baseUrl = `${environment.apiUrl}/patient`;
+
+  private baseUrl = `${environment.apiUrl}/patient`; // http://192.168.1.186:8080/api/patient
 
   constructor(private http: HttpClient) {}
 
   registerPatient(patient: Patient): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, patient);
   }
+
+  getAllPatients(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.baseUrl}/getAll`);
+  }
+
 }
