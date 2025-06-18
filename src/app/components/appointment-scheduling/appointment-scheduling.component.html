@@ -1,1 +1,61 @@
-<p>appointment-scheduling works!</p>
+<div class="appointment-container">
+  <form [formGroup]="appointmentForm" (ngSubmit)="submit()">
+    <h2>Appointment Details</h2>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Hospital</mat-label>
+      <input matInput formControlName="hospital" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Appointment Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="appointmentDate" (dateChange)="loadDoctorSlots()" />
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Patient ID</mat-label>
+      <input matInput formControlName="patientId" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Doctor</mat-label>
+      <mat-select formControlName="doctorId" (selectionChange)="loadDoctorSlots()">
+        <mat-option *ngFor="let doc of doctors" [value]="doc.doctorId">
+          {{ doc.doctorName }} / {{ doc.specialization }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Consultant</mat-label>
+      <input matInput formControlName="consultant" />
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="location" />
+    </mat-form-field>
+
+    <!-- Doctor Slot Section -->
+    <div class="slots-section">
+      <h3>Doctor Slots Details:</h3>
+      <div class="slots-scroll-container">
+        <div class="slots-grid">
+          <button
+            mat-button
+            *ngFor="let slot of slots"
+            [disabled]="slot.booked"
+            [ngClass]="{ booked: slot.booked, selected: selectedSlotId === slot.slotId }"
+            (click)="selectSlot(slot)"
+          >
+            {{ slot.time }} ({{ slot.token }})
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!selectedSlotId">Save</button>
+  </form>
+</div>

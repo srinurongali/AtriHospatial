@@ -1,4 +1,6 @@
 import { Routes } from '@angular/router';
+
+// Import your standalone components
 import { StandardAllergyComponent } from './components/standard-allergy/standard-allergy.component';
 import { StandardProcedureComponentsComponent } from './components/standard-procedure-components/standard-procedure-components.component';
 import { PatientRegistrationComponent } from './components/patient-registration/patient-registration.component';
@@ -7,10 +9,18 @@ import { AppointmentSchedulingComponent } from './components/appointment-schedul
 
 export const routes: Routes = [
   { path: '', redirectTo: 'patient-registration', pathMatch: 'full' },
-  { path: 'standard-allergy', component: StandardAllergyComponent },
-  { path: 'standard-procedure', component: StandardProcedureComponentsComponent },
+  
+  // Patient related
   { path: 'patient-registration', component: PatientRegistrationComponent },
   { path: 'patient-list', component: PatientListComponent },
-  { path: 'appointment-scheduling', component: AppointmentSchedulingComponent  },
+
+  // Appointment scheduling
+  { path: 'appointment-scheduling', component: AppointmentSchedulingComponent },
+
+  // Master data
+  { path: 'standard-allergy', component: StandardAllergyComponent },
+  { path: 'standard-procedure', component: StandardProcedureComponentsComponent },
+
+  // Wildcard route fallback
   { path: '**', redirectTo: 'patient-registration' }
 ];

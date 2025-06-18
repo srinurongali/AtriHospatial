@@ -54,7 +54,7 @@ export class PatientRegistrationComponent {
       this.patientService.registerPatient(formData).subscribe({
         next: () => {
           this.snackBar.open('✅ Patient registered successfully!', 'Close', {
-            duration: 3000,
+            duration: 2000,
             horizontalPosition: 'center',
             verticalPosition: 'top'
           });
@@ -69,7 +69,7 @@ export class PatientRegistrationComponent {
         },
         error: () => {
           this.snackBar.open('❌ Failed to save patient data', 'Close', {
-            duration: 3000,
+            duration: 2000,
             horizontalPosition: 'center',
             verticalPosition: 'top'
           });
@@ -77,7 +77,7 @@ export class PatientRegistrationComponent {
       });
     } else {
       this.snackBar.open('⚠️ Please fill in required fields', 'Close', {
-        duration: 3000,
+        duration: 2000,
         horizontalPosition: 'center',
         verticalPosition: 'top'
       });
