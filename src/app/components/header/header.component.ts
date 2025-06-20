@@ -26,82 +26,33 @@ export class HeaderComponent {
   }
 
   navigateToAllergySetup() {
-    console.log('Navigating to Allergy Setup...');
     this.isSetupsDropdownVisible = false;
-    this.router.navigate(['/standard-allergy']).then(
-      success => {
-        console.log('Navigation successful:', success);
-      },
-      error => {
-        console.error('Navigation failed:', error);
-      }
-    );
+    this.router.navigate(['/standard-allergy']);
   }
 
   navigateToProcedureSetup() {
-    console.log('Navigating to Procedure Setup...');
     this.isSetupsDropdownVisible = false;
-    this.router.navigate(['/standard-procedure']).then(
-      success => {
-        console.log('Navigation successful:', success);
-      },
-      error => {
-        console.error('Navigation failed:', error);
-      }
-    );
+    this.router.navigate(['/standard-procedure']);
   }
 
-  // Service navigation methods
   navigateToPatientManagement() {
-    console.log('Navigating to Patient Registration...');
     this.isServicesDropdownVisible = false;
-    this.router.navigate(['/patient-registration']).then(
-      success => {
-        console.log('Navigation successful:', success);
-      },
-      error => {
-        console.error('Navigation failed:', error);
-      }
-    );
+    this.router.navigate(['/patient-registration']);
   }
 
   navigateToAppointmentScheduling() {
-    console.log('Navigating to Appointment Scheduling...');
     this.isServicesDropdownVisible = false;
-    this.router.navigate(['/appointment-scheduling']).then(
-      success => {
-        console.log('Navigation successful:', success);
-      },
-      error => {
-        console.error('Navigation failed:', error);
-      }
-    );
+    this.router.navigate(['/appointment-scheduling']);
   }
 
   navigateToBillingInsurance() {
-    console.log('Navigating to Billing & Insurance...');
     this.isServicesDropdownVisible = false;
-    this.router.navigate(['/billing-insurance']).then(
-      success => {
-        console.log('Navigation successful:', success);
-      },
-      error => {
-        console.error('Navigation failed:', error);
-      }
-    );
+    this.router.navigate(['/billing-insurance']);
   }
 
   navigateToReportsAnalytics() {
-    console.log('Navigating to Reports & Analytics...');
     this.isServicesDropdownVisible = false;
-    this.router.navigate(['/reports-analytics']).then(
-      success => {
-        console.log('Navigation successful:', success);
-      },
-      error => {
-        console.error('Navigation failed:', error);
-      }
-    );
+    this.router.navigate(['/reports-analytics']);
   }
 
   @HostListener('document:click', ['$event'])

@@ -1,0 +1,49 @@
+<div class="appointment-form">
+  <h2>Appointment Booking</h2>
+
+  <div class="patient-info">
+    <strong>UMR No:</strong> {{ patient.umrNo }} |
+    <strong>Name:</strong> {{ patient.patientName }} |
+    <strong>Age:</strong> {{ patient.age }} |
+    <strong>Gender:</strong> {{ patient.gender }}
+  </div>
+
+  <form [formGroup]="appointmentForm" (ngSubmit)="submit()">
+    <mat-form-field appearance="outline">
+      <mat-label>Location</mat-label>
+      <input matInput formControlName="location">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Consultant Name</mat-label>
+      <mat-select formControlName="consultantName" (selectionChange)="onConsultantSelect($event.value)">
+        <mat-option *ngFor="let consultant of consultants" [value]="consultant.doctorId">
+          {{ consultant.displayName.split(' - ')[0] }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Specialization</mat-label>
+      <input matInput formControlName="specialization" [disabled]="true">
+    </mat-form-field>
+
+    <div class="fee-section">
+      <h4>Fee Details</h4>
+      <p>Registration Fee: ₹{{ registrationFee }}</p>
+      <p>Consultant Fee: ₹{{ consultantFee }}</p>
+      <p><strong>Total Amount: ₹{{ totalAmount }}</strong></p>
+    </div>
+
+    <button mat-raised-button color="primary" type="submit" [disabled]="!appointmentForm.valid">
+      Save Appointment
+    </button>
+  </form>
+</div>

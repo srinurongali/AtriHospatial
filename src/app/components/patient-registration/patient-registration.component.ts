@@ -52,7 +52,7 @@ export class PatientRegistrationComponent {
       };
 
       this.patientService.registerPatient(formData).subscribe({
-        next: () => {
+        next: (registeredPatient) => {
           this.snackBar.open('✅ Patient registered successfully!', 'Close', {
             duration: 2000,
             horizontalPosition: 'center',
@@ -60,11 +60,16 @@ export class PatientRegistrationComponent {
           });
           form.resetForm();
 
-          // navigate to patient list after slightly dely 
-
-
-          setTimeout(()=>{
-            this.router.navigate(['/patient-list']);
+          // Redirect to appointment booking with patient details
+          setTimeout(() => {
+            this.router.navigate(['/appointment-booking'], {
+              queryParams: {
+                umrNo: registeredPatient.umrNo || '',
+                patientName: (registeredPatient.firstName || '') + ' ' + (registeredPatient.lastName || ''),
+                age: registeredPatient.ageYears || '',
+                gender: registeredPatient.gender || ''
+              }
+            });
           }, 500);
         },
         error: () => {
