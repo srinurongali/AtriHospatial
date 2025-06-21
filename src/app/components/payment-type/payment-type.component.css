@@ -1,0 +1,139 @@
+.payment-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 40px;
+  background-color: #f4f7f6;
+  min-height: calc(100vh - 120px); /* Adjust based on header/footer height */
+}
+
+.payment-card {
+  max-width: 500px;
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+mat-card-header {
+  background-color: #03a9f4;
+  color: white;
+  padding: 24px;
+}
+
+mat-card-title {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.85);
+  margin-top: 4px;
+}
+
+mat-card-content {
+  padding: 24px;
+}
+
+/* Payment Summary */
+.payment-summary {
+  margin-bottom: 24px;
+}
+
+.payment-summary h3 {
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #03a9f4;
+  padding-bottom: 8px;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 16px;
+  color: #555;
+}
+
+.summary-item.total {
+  font-weight: 700;
+  font-size: 18px;
+  color: #000;
+  margin-top: 12px;
+}
+
+/* Tab Group Styling */
+.mat-mdc-tab-group {
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.mat-mdc-tab-header {
+  background-color: #e3f2fd;
+}
+
+.mat-mdc-tab .mdc-tab__text-label {
+  color: #01579b;
+  font-weight: 600;
+}
+
+.mat-mdc-tab .mdc-tab-indicator__content--underline {
+  background-color: #0288d1 !important;
+}
+
+.tab-icon {
+  margin-right: 8px;
+}
+
+/* Payment Forms and Instructions */
+.payment-form, .payment-instruction {
+  padding: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-top: none;
+  border-radius: 0 0 8px 8px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+.form-row mat-form-field {
+  flex: 1;
+}
+
+.payment-instruction {
+  text-align: center;
+  font-size: 16px;
+  color: #444;
+}
+
+.payment-instruction p {
+  margin: 8px 0;
+}
+
+.qr-code {
+  max-width: 180px;
+  height: auto;
+  margin: 16px auto;
+  display: block;
+}
+
+/* Card Actions */
+mat-card-actions {
+  display: flex;
+  justify-content: space-between;
+  background-color: #f8f9fa;
+  padding: 16px 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+mat-card-actions button {
+  width: 48%;
+  padding: 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+}

@@ -32,6 +32,7 @@ export interface Patient {
   smsNotification?: boolean;
   createdBy?: string;
   createdIp?: string;
+  umrNumber?: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -41,12 +42,15 @@ export class PatientService {
 
   constructor(private http: HttpClient) {}
 
-  registerPatient(patient: Patient): Observable<any> {
-    return this.http.post(`${this.baseUrl}/register`, patient);
+  registerPatient(patient: Patient): Observable<Patient> {
+    return this.http.post<Patient>(`${this.baseUrl}/register`, patient);
   }
 
   getAllPatients(): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/getAll`);
   }
 
+  getPatientByUmr(umrNumber: string): Observable<Patient> {
+    return this.http.get<Patient>(`${this.baseUrl}/search/${umrNumber}`);
+  }
 }

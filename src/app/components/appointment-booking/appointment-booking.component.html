@@ -1,11 +1,22 @@
 <div class="appointment-form">
   <h2>Appointment Booking</h2>
+  <div class="header-section">
+    <div class="search-container">
+      <mat-form-field appearance="outline" class="search-input">
+        <mat-label>Search Patient (UMR)</mat-label>
+        <input matInput #searchInput (keyup.enter)="searchPatient(searchInput.value)">
+        <button mat-icon-button matSuffix (click)="searchPatient(searchInput.value)" matTooltip="Search by UMR number">
+          <mat-icon>search</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+  </div>
 
   <div class="patient-info">
-    <strong>UMR No:</strong> {{ patient.umrNo }} |
-    <strong>Name:</strong> {{ patient.patientName }} |
-    <strong>Age:</strong> {{ patient.age }} |
-    <strong>Gender:</strong> {{ patient.gender }}
+    <span><strong>UMR No:</strong> {{ patient.umrNo }}</span>
+    <span><strong>Name:</strong> {{ patient.patientName }}</span>
+    <span><strong>Age:</strong> {{ patient.age }}</span>
+    <span><strong>Gender:</strong> {{ patient.gender }}</span>
   </div>
 
   <form [formGroup]="appointmentForm" (ngSubmit)="submit()">
@@ -18,14 +29,14 @@
       <mat-label>Date</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
+      <mat-datepicker #picker panelClass="dark-theme-datepicker"></mat-datepicker>
     </mat-form-field>
 
     <mat-form-field appearance="outline">
       <mat-label>Consultant Name</mat-label>
-      <mat-select formControlName="consultantName" (selectionChange)="onConsultantSelect($event.value)">
+      <mat-select formControlName="consultantName" (selectionChange)="onConsultantSelect($event.value)" panelClass="dark-theme-select-panel">
         <mat-option *ngFor="let consultant of consultants" [value]="consultant.doctorId">
-          {{ consultant.displayName.split(' - ')[0] }}
+          {{ consultant.displayName }}
         </mat-option>
       </mat-select>
     </mat-form-field>

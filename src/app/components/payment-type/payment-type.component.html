@@ -1,0 +1,91 @@
+<div class="payment-container">
+  <mat-card class="payment-card">
+    <mat-card-header>
+      <mat-card-title>Complete Your Payment</mat-card-title>
+      <mat-card-subtitle>Appointment for {{ patientName }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Payment Summary -->
+      <div class="payment-summary">
+        <h3>Payment Details</h3>
+        <div class="summary-item">
+          <span>Registration Fee:</span>
+          <span>₹{{ registrationFee }}</span>
+        </div>
+        <div class="summary-item">
+          <span>Consultant Fee:</span>
+          <span>₹{{ consultantFee }}</span>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="summary-item total">
+          <span>Total Amount:</span>
+          <span>₹{{ totalAmount }}</span>
+        </div>
+      </div>
+
+      <!-- Payment Method Tabs -->
+      <mat-tab-group animationDuration="0ms" (selectedTabChange)="onTabChange($event)">
+        <!-- Card Payment Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">credit_card</mat-icon>
+            Card
+          </ng-template>
+          <div class="payment-form">
+            <mat-form-field appearance="outline">
+              <mat-label>Card Number</mat-label>
+              <input matInput placeholder="xxxx xxxx xxxx xxxx">
+            </mat-form-field>
+            <div class="form-row">
+              <mat-form-field appearance="outline">
+                <mat-label>Expiry Date</mat-label>
+                <input matInput placeholder="MM/YY">
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>CVC</mat-label>
+                <input matInput placeholder="xxx">
+              </mat-form-field>
+            </div>
+            <mat-form-field appearance="outline">
+              <mat-label>Cardholder Name</mat-label>
+              <input matInput>
+            </mat-form-field>
+          </div>
+        </mat-tab>
+
+        <!-- Cash Payment Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">money</mat-icon>
+            Cash
+          </ng-template>
+          <div class="payment-instruction">
+            <p>Please proceed to the payment counter to complete your transaction with cash.</p>
+            <p>Reference ID: <strong>{{ appointmentId }}</strong></p>
+          </div>
+        </mat-tab>
+
+        <!-- UPI Payment Tab -->
+        <mat-tab>
+          <ng-template mat-tab-label>
+            <mat-icon class="tab-icon">mobile_friendly</mat-icon>
+            UPI
+          </ng-template>
+          <div class="payment-instruction upi-section">
+            <p>Scan the QR code with your UPI app to pay.</p>
+            <img src="assets/images/sample-qr-code.png" alt="Sample QR Code" class="qr-code">
+            <p>Or pay to UPI ID: <strong>atrihospial&#64;upi</strong></p>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-flat-button color="warn" (click)="cancelPayment()">Cancel</button>
+      <button mat-raised-button color="primary" (click)="processPayment()">
+        Pay ₹{{ totalAmount }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

@@ -37,46 +37,70 @@ body::before {
     z-index: -1;
 }
 
-/* Global styles for Angular Material components */
+/* --- Corrected Dark Theme for Material Popups --- */
 
-/* Ensure the dropdown panel has a dark background and white text */
-html {
-  --mat-select-panel-background-color: #34495e;
-  --mat-option-label-text-color: white;
-  --mat-select-enabled-trigger-text-color: white;
-  --mdc-outlined-text-field-outline-color: white;
+/* 1. Datepicker Popup Styling */
+.dark-theme-datepicker {
+  z-index: 1050 !important; /* Higher z-index to appear on top */
 }
 
-/* Specific styles for the dropdown panel overlay */
-.cdk-overlay-pane .mat-mdc-select-panel {
-  background-color: var(--mat-select-panel-background-color) !important;
+.dark-theme-datepicker .mat-datepicker-content {
+  background-color: #2c3e50; /* Dark background */
+  color: #ffffff; /* White text */
 }
 
-/* Style for individual options within the dropdown */
-.cdk-overlay-pane .mat-mdc-option {
-  color: var(--mat-option-label-text-color) !important;
+.dark-theme-datepicker .mat-calendar-header {
+  padding: 8px;
+  background-color: #2c3e50;
 }
 
-/* Style for the selected value in the dropdown trigger */
-.mat-mdc-select-value {
-  color: var(--mat-select-enabled-trigger-text-color) !important;
+.dark-theme-datepicker .mat-calendar-period-button {
+  color: #03a9f4 !important;
+  font-weight: bold;
 }
 
-/* Style for the outline of the select field */
-.mat-mdc-form-field-appearance-outline .mat-mdc-form-field-outline {
-  color: var(--mdc-outlined-text-field-outline-color) !important;
+.dark-theme-datepicker .mat-calendar-arrow {
+  border-top-color: #ffffff !important;
 }
 
-/* Style for the hover/focus state of options */
-.cdk-overlay-pane .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text,
-.cdk-overlay-pane .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-  color: white !important;
+.dark-theme-datepicker .mat-calendar-table-header th {
+  color: #b0bec5 !important;
 }
 
-.cdk-overlay-pane .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
-  background-color: #0277bd !important; /* Highlight color for selected/hovered option */
+.dark-theme-datepicker .mat-calendar-body-label,
+.dark-theme-datepicker .mat-calendar-body-cell-content {
+  color: #ffffff !important;
+  border-radius: 4px;
 }
 
-.cdk-overlay-pane .mat-mdc-option:hover:not(.mdc-list-item--selected):not(.mdc-list-item--disabled) {
-  background-color: #4a637a !important; /* Hover background for unselected options */
+.dark-theme-datepicker .mat-calendar-body-disabled > .mat-calendar-body-cell-content {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.dark-theme-datepicker .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover > .mat-calendar-body-cell-content {
+  background-color: rgba(3, 169, 244, 0.3) !important;
+}
+
+.dark-theme-datepicker .mat-calendar-body-selected {
+  background-color: #03a9f4 !important;
+  color: #ffffff !important;
+}
+
+.dark-theme-datepicker .mat-calendar-body-today:not(.mat-calendar-body-selected) {
+  border: 1px solid #ffca28 !important;
+}
+
+/* 2. Select Dropdown Panel Styling */
+.dark-theme-select-panel .mat-mdc-select-panel {
+  background: #2c3e50 !important;
+}
+.dark-theme-select-panel .mat-mdc-option {
+  color: #ffffff !important;
+}
+.dark-theme-select-panel .mat-mdc-option:hover:not(.mdc-list-item--disabled),
+.dark-theme-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) {
+  background: rgba(3, 169, 244, 0.2) !important;
+}
+.dark-theme-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
+  color: #ffffff !important;
 }

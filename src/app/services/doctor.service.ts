@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 export interface DoctorDropdownDto {
   doctorId: number;
   displayName: string;
+  specialization: string;
 }
 
 @Injectable({ providedIn: 'root' })

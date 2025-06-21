@@ -9,6 +9,10 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DoctorService, DoctorDropdownDto } from '../../services/doctor.service';
+import { PatientService, Patient } from '../../services/patient.service';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-appointment-booking',
@@ -21,7 +25,10 @@ import { DoctorService, DoctorDropdownDto } from '../../services/doctor.service'
     MatSelectModule,
     MatButtonModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatSnackBarModule,
+    MatIconModule,
+    MatTooltipModule
   ],
   templateUrl: './appointment-booking.component.html',
   styleUrls: ['./appointment-booking.component.css']
@@ -30,10 +37,10 @@ export class AppointmentBookingComponent implements OnInit {
   appointmentForm!: FormGroup;
 
   patient = {
-    umrNo: 'UMR123456',
-    patientName: 'John Doe',
-    age: 34,
-    gender: 'Male'
+    umrNo: '',
+    patientName: '',
+    age: '',
+    gender: ''
   };
 
   consultants: DoctorDropdownDto[] = [];
@@ -46,16 +53,18 @@ export class AppointmentBookingComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private doctorService: DoctorService
+    private doctorService: DoctorService,
+    private patientService: PatientService,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.patient = {
-        umrNo: params['umrNo'] || 'UMR123456',
-        patientName: params['patientName'] || 'John Doe',
-        age: params['age'] || 34,
-        gender: params['gender'] || 'Male'
+        umrNo: params['umrNo'] || 'N/A',
+        patientName: params['patientName'] || 'N/A',
+        age: params['age'] || 'N/A',
+        gender: params['gender'] || 'N/A'
       };
     });
 
@@ -73,11 +82,42 @@ export class AppointmentBookingComponent implements OnInit {
     });
   }
 
+  searchPatient(umrNumber: string) {
+    if (!umrNumber) {
+      this.snackBar.open('Please enter a UMR number to search.', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top'
+      });
+      return;
+    }
+
+    this.patientService.getPatientByUmr(umrNumber).subscribe({
+      next: (data: Patient) => {
+        this.patient = {
+          umrNo: data.umrNumber || 'N/A',
+          patientName: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
+          age: (data.ageYears || 'N/A').toString(),
+          gender: data.gender || 'N/A'
+        };
+        this.snackBar.open('✅ Patient found successfully!', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top'
+        });
+      },
+      error: () => {
+        this.snackBar.open('❌ Patient not found with the provided UMR number.', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top'
+        });
+        this.patient = { umrNo: 'N/A', patientName: 'N/A', age: 'N/A', gender: 'N/A' };
+      }
+    });
+  }
+
   onConsultantSelect(doctorId: number) {
     const selected = this.consultants.find(c => c.doctorId === doctorId);
     if (selected) {
-      const specialization = selected.displayName.split(' - ')[1] || '';
-      this.appointmentForm.get('specialization')?.setValue(specialization);
+      this.appointmentForm.get('specialization')?.setValue(selected.specialization);
     }
   }
 
@@ -87,18 +127,23 @@ export class AppointmentBookingComponent implements OnInit {
 
   submit() {
     if (this.appointmentForm.invalid) {
-      alert('Please fill all required fields.');
+      this.snackBar.open('Please fill all required fields.', 'Close', {
+        duration: 3000
+      });
       return;
     }
 
-    const payload = {
-      ...this.appointmentForm.getRawValue(),
-      umrNumber: this.patient.umrNo, // ✅ Renamed field to match backend
-      totalFee: this.totalAmount
-    };
+    // Generate a mock appointment ID for this session
+    const mockAppointmentId = `APP${Date.now()}`;
 
-    console.log('Appointment Saved:', payload);
-    alert('Appointment Saved Successfully!');
-    this.router.navigate(['/appointment-booking']);
+    // On successful booking, navigate to the payment screen
+    this.router.navigate(['/payment'], {
+      queryParams: {
+        appointmentId: mockAppointmentId,
+        patientName: this.patient.patientName,
+        regFee: this.registrationFee,
+        consultantFee: this.consultantFee
+      }
+    });
   }
 }

@@ -53,6 +53,7 @@ export class PatientRegistrationComponent {
 
       this.patientService.registerPatient(formData).subscribe({
         next: (registeredPatient) => {
+          console.log('Registered Patient Response:', registeredPatient);
           this.snackBar.open('✅ Patient registered successfully!', 'Close', {
             duration: 2000,
             horizontalPosition: 'center',
@@ -64,7 +65,7 @@ export class PatientRegistrationComponent {
           setTimeout(() => {
             this.router.navigate(['/appointment-booking'], {
               queryParams: {
-                umrNo: registeredPatient.umrNo || '',
+                umrNo: registeredPatient.umrNumber || '',
                 patientName: (registeredPatient.firstName || '') + ' ' + (registeredPatient.lastName || ''),
                 age: registeredPatient.ageYears || '',
                 gender: registeredPatient.gender || ''
