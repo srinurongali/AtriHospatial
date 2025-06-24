@@ -164,3 +164,72 @@ button:hover {
     flex-basis: 100%;
   }
 }
+
+.appointment-form {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+}
+
+.header-section {
+  margin-bottom: 20px;
+}
+
+.search-container {
+  width: 100%;
+}
+
+.search-input {
+  width: 100%;
+}
+
+.patient-table-container {
+  margin-bottom: 20px;
+  max-height: 400px;
+  overflow: auto;
+}
+
+.patient-table {
+  width: 100%;
+}
+
+.mat-mdc-row:hover {
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.selected-patient-info {
+  background-color: #e3f2fd;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.patient-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.patient-info span {
+  flex: 1;
+  min-width: 200px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.fee-section {
+  background-color: #f5f5f5;
+  padding: 15px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+
+button[type="submit"] {
+  width: 100%;
+  margin-top: 20px;
+  padding: 10px;
+}

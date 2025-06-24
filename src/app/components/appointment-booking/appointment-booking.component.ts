@@ -13,6 +13,8 @@ import { PatientService, Patient } from '../../services/patient.service';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-appointment-booking',
@@ -28,22 +30,22 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatNativeDateModule,
     MatSnackBarModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatTableModule
   ],
   templateUrl: './appointment-booking.component.html',
   styleUrls: ['./appointment-booking.component.css']
 })
 export class AppointmentBookingComponent implements OnInit {
   appointmentForm!: FormGroup;
-
-  patient = {
-    umrNo: '',
-    patientName: '',
-    age: '',
-    gender: ''
-  };
-
+  selectedPatient: Patient | null = null;
   consultants: DoctorDropdownDto[] = [];
+  
+  displayedColumns: string[] = ['umrNo', 'name', 'age', 'gender', 'action'];
+  dataSource!: MatTableDataSource<Patient>;
+  allPatients: Patient[] = [];
+
+  locations: string[] = ['Indus Hospital', 'Care Hospital'];
 
   registrationFee = 50;
   consultantFee = 600;
@@ -59,65 +61,67 @@ export class AppointmentBookingComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
-      this.patient = {
-        umrNo: params['umrNo'] || 'N/A',
-        patientName: params['patientName'] || 'N/A',
-        age: params['age'] || 'N/A',
-        gender: params['gender'] || 'N/A'
-      };
-    });
-
     this.appointmentForm = this.fb.group({
       location: ['', Validators.required],
       date: ['', Validators.required],
-      consultantName: ['', Validators.required],
-      specialization: [{ value: '', disabled: true }, Validators.required]
+      consultant: [null, Validators.required],
+      specialization: ['']
     });
 
+    this.loadPatients();
+    this.loadDoctors();
     this.calculateTotal();
+  }
 
+  loadPatients() {
+    this.patientService.getAllPatients().subscribe({
+      next: (patients) => {
+        this.allPatients = patients;
+        this.dataSource = new MatTableDataSource<Patient>([]);
+        this.dataSource.filterPredicate = (data: Patient, filter: string) => {
+          return (data.umrNumber || '').toLowerCase() === filter.toLowerCase();
+        };
+      },
+      error: (error) => {
+        this.snackBar.open('Error loading patients', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top'
+        });
+      }
+    });
+  }
+
+  loadDoctors() {
     this.doctorService.getAllDoctors().subscribe(doctors => {
       this.consultants = doctors;
     });
   }
 
-  searchPatient(umrNumber: string) {
-    if (!umrNumber) {
-      this.snackBar.open('Please enter a UMR number to search.', 'Close', {
-        duration: 3000,
-        verticalPosition: 'top'
-      });
-      return;
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    if (filterValue) {
+      this.dataSource.data = this.allPatients.filter(patient =>
+        (patient.umrNumber || '').toLowerCase() === filterValue
+      );
+    } else {
+      this.dataSource.data = [];
     }
+  }
 
-    this.patientService.getPatientByUmr(umrNumber).subscribe({
-      next: (data: Patient) => {
-        this.patient = {
-          umrNo: data.umrNumber || 'N/A',
-          patientName: `${data.firstName || ''} ${data.lastName || ''}`.trim(),
-          age: (data.ageYears || 'N/A').toString(),
-          gender: data.gender || 'N/A'
-        };
-        this.snackBar.open('✅ Patient found successfully!', 'Close', {
-          duration: 3000,
-          verticalPosition: 'top'
-        });
-      },
-      error: () => {
-        this.snackBar.open('❌ Patient not found with the provided UMR number.', 'Close', {
-          duration: 3000,
-          verticalPosition: 'top'
-        });
-        this.patient = { umrNo: 'N/A', patientName: 'N/A', age: 'N/A', gender: 'N/A' };
-      }
+  selectPatient(patient: Patient) {
+    this.selectedPatient = patient;
+    this.snackBar.open('Patient selected successfully', 'Close', {
+      duration: 2000,
+      verticalPosition: 'top'
     });
   }
 
-  onConsultantSelect(doctorId: number) {
-    const selected = this.consultants.find(c => c.doctorId === doctorId);
-    if (selected) {
-      this.appointmentForm.get('specialization')?.setValue(selected.specialization);
+  onConsultantSelect(doctorId: number | null) {
+    const consultant = this.consultants.find(c => c.doctorId === doctorId) || null;
+    if (consultant) {
+      this.appointmentForm.get('specialization')?.setValue(consultant.specialization);
+    } else {
+      this.appointmentForm.get('specialization')?.setValue('');
     }
   }
 
@@ -126,21 +130,19 @@ export class AppointmentBookingComponent implements OnInit {
   }
 
   submit() {
-    if (this.appointmentForm.invalid) {
-      this.snackBar.open('Please fill all required fields.', 'Close', {
+    if (this.appointmentForm.invalid || !this.selectedPatient) {
+      this.snackBar.open('Please fill all required fields and select a patient.', 'Close', {
         duration: 3000
       });
       return;
     }
 
-    // Generate a mock appointment ID for this session
     const mockAppointmentId = `APP${Date.now()}`;
 
-    // On successful booking, navigate to the payment screen
     this.router.navigate(['/payment'], {
       queryParams: {
         appointmentId: mockAppointmentId,
-        patientName: this.patient.patientName,
+        patientName: `${this.selectedPatient.firstName} ${this.selectedPatient.lastName}`,
         regFee: this.registrationFee,
         consultantFee: this.consultantFee
       }
