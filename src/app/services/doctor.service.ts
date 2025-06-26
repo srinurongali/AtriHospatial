@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment';
 
 export interface DoctorDropdownDto {
   doctorId: number;
+  doctorName: string;
   displayName: string;
   specialization: string;
 }

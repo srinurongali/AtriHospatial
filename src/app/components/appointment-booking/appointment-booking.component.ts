@@ -138,8 +138,9 @@ export class AppointmentBookingComponent implements OnInit {
 loadDoctors() {
   this.doctorService.getAllDoctors().subscribe(doctors => {
     this.consultants = doctors.map(doc => ({
-      ...doc,
-      nameOnly: doc.displayName?.split(' - ')[0] || doc.displayName || 'Unknown',
+      doctorId: doc.doctorId,
+      doctorName: doc.doctorName,
+      displayName: doc.doctorName,
       specialization: doc.specialization || 'N/A'
     }));
   });
