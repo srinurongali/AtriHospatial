@@ -15,6 +15,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../patient-registration/confirm-dialog.component';
+import { AppointmentService } from '../../services/appointment.service';
 
 @Component({
   selector: 'app-appointment-booking',
@@ -57,7 +60,9 @@ export class AppointmentBookingComponent implements OnInit {
     private route: ActivatedRoute,
     private doctorService: DoctorService,
     private patientService: PatientService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog,
+    private appointmentService: AppointmentService
   ) {}
 
  ngOnInit(): void {
@@ -150,11 +155,19 @@ loadDoctors() {
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
     if (filterValue) {
-      this.dataSource.data = this.allPatients.filter(patient =>
-        (patient.umrNumber || '').toLowerCase() === filterValue
+      const filtered = this.allPatients.filter(patient =>
+        (patient.umrNumber || '').toLowerCase() === filterValue ||
+        (`${patient.firstName} ${patient.lastName}`.toLowerCase().includes(filterValue))
       );
+      this.dataSource.data = filtered;
+      if (filtered.length === 1) {
+        this.selectPatient(filtered[0]);
+      } else {
+        this.selectedPatient = null;
+      }
     } else {
       this.dataSource.data = [];
+      this.selectedPatient = null;
     }
   }
 
@@ -189,14 +202,50 @@ loadDoctors() {
       return;
     }
 
-    const mockAppointmentId = `APP${Date.now()}`;
+    // Prepare appointment data for backend
+    const appointmentData = {
+      umrNumber: this.selectedPatient.umrNumber,
+      doctorId: this.appointmentForm.value.consultant,
+      appointmentDate: this.appointmentForm.value.date,
+      location: this.appointmentForm.value.location,
+      createdBy: 'admin', // Replace with actual user if available
+      createdIp: '127.0.0.1' // Replace with actual IP if available
+    };
 
-    this.router.navigate(['/payment'], {
-      queryParams: {
-        appointmentId: mockAppointmentId,
-        patientName: `${this.selectedPatient.firstName} ${this.selectedPatient.lastName}`,
-        regFee: this.registrationFee,
-        consultantFee: this.consultantFee
+    this.appointmentService.saveAppointment(appointmentData).subscribe({
+      next: (response) => {
+        // Only after backend confirms, show success and payment dialog
+        this.snackBar.open('Appointment details saved successfully.', 'Close', {
+          duration: 2000,
+          verticalPosition: 'top'
+        });
+
+        const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+          data: {
+            title: 'Book Payment',
+            message: 'Do you want to book payment?'
+          }
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+          if (result) {
+            // Use backend response for payment navigation
+            this.router.navigate(['/payment'], {
+              queryParams: {
+                appointmentId: response.appointmentId,
+                patientName: response.patientName,
+                regFee: this.registrationFee,
+                consultantFee: this.consultantFee
+              }
+            });
+          }
+        });
+      },
+      error: (err) => {
+        this.snackBar.open('Failed to save appointment: ' + (err.error?.message || 'Unknown error'), 'Close', {
+          duration: 3000,
+          verticalPosition: 'top'
+        });
       }
     });
   }
