@@ -104,3 +104,22 @@ body::before {
 .dark-theme-select-panel .mat-mdc-option.mdc-list-item--selected:not(.mdc-list-item--disabled) .mdc-list-item__primary-text {
   color: #ffffff !important;
 }
+
+/* Use ::ng-deep to pierce Angular's view encapsulation for mat-select dropdowns */
+::ng-deep .mat-select-panel,
+::ng-deep .mat-option,
+::ng-deep .mat-select-value,
+::ng-deep .mat-select-placeholder,
+::ng-deep .mat-select-arrow,
+::ng-deep .mat-select-panel .mat-option,
+::ng-deep .mat-select-panel .mat-option .mat-option-text,
+::ng-deep .mat-select-content {
+  color: #222 !important;
+  background: #fff !important;
+}
+
+::ng-deep .mat-option.mat-selected,
+::ng-deep .mat-option.mat-active {
+  color: #222 !important;
+  background: #e0e0e0 !important;
+}

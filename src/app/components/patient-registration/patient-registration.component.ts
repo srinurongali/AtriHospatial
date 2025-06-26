@@ -47,6 +47,29 @@ export class PatientRegistrationComponent {
     private dialog: MatDialog
   ) {}
 
+  calculateAgeFromDOB(dobString: string, form: NgForm) {
+    if (!dobString) return;
+    const dob = new Date(dobString);
+    const today = new Date();
+
+    let years = today.getFullYear() - dob.getFullYear();
+    let months = today.getMonth() - dob.getMonth();
+    let days = today.getDate() - dob.getDate();
+
+    if (days < 0) {
+      months--;
+      days += new Date(today.getFullYear(), today.getMonth(), 0).getDate();
+    }
+    if (months < 0) {
+      years--;
+      months += 12;
+    }
+
+    form.controls['ageYears']?.setValue(years);
+    form.controls['ageMonths']?.setValue(months);
+    form.controls['ageDays']?.setValue(days);
+  }
+
   onSubmit(form: NgForm): void {
     if (!form.valid) {
       this.snackBar.open('⚠️ Please fill in required fields', 'Close', {

@@ -80,18 +80,20 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline">
-      <mat-label>Consultant Name</mat-label>
-      <mat-select formControlName="consultant" (selectionChange)="onConsultantSelect($event.value)">
-        <mat-option *ngFor="let consultant of consultants" [value]="consultant.doctorId">
-          {{ consultant.displayName }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+  <mat-label>Consultant Name</mat-label>
+  <mat-select formControlName="consultant" (selectionChange)="onConsultantSelect($event.value)">
+    <mat-option *ngFor="let consultant of consultants" [value]="consultant.doctorId">
+      {{ consultant.displayName }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Specialization</mat-label>
-      <input matInput formControlName="specialization" [readonly]="true">
-    </mat-form-field>
+<mat-form-field appearance="outline">
+  <mat-label>Specialization</mat-label>
+  <input matInput formControlName="specialization" readonly>
+</mat-form-field>
+
+
 
     <div class="fee-section">
       <h4>Fee Details</h4>

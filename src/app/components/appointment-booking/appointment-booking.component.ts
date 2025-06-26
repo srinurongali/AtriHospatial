@@ -60,42 +60,91 @@ export class AppointmentBookingComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
-  ngOnInit(): void {
-    this.appointmentForm = this.fb.group({
-      location: ['', Validators.required],
-      date: ['', Validators.required],
-      consultant: [null, Validators.required],
-      specialization: ['']
-    });
+ ngOnInit(): void {
+  this.appointmentForm = this.fb.group({
+    location: ['', Validators.required],
+    date: ['', Validators.required],
+    consultant: [null, Validators.required],
+    specialization: ['']
+  });
 
-    this.loadPatients();
-    this.loadDoctors();
-    this.calculateTotal();
-  }
+  this.loadDoctors();
+  this.calculateTotal();
 
-  loadPatients() {
-    this.patientService.getAllPatients().subscribe({
-      next: (patients) => {
-        this.allPatients = patients;
-        this.dataSource = new MatTableDataSource<Patient>([]);
-        this.dataSource.filterPredicate = (data: Patient, filter: string) => {
-          return (data.umrNumber || '').toLowerCase() === filter.toLowerCase();
-        };
-      },
-      error: (error) => {
-        this.snackBar.open('Error loading patients', 'Close', {
-          duration: 3000,
-          verticalPosition: 'top'
-        });
-      }
-    });
-  }
+  // Read patient details from query params
+  this.route.queryParams.subscribe(params => {
+    const umrNo = params['umrNo'];
+    const patientName = params['patientName'];
+    const age = params['age'];
+    const gender = params['gender'];
 
-  loadDoctors() {
-    this.doctorService.getAllDoctors().subscribe(doctors => {
-      this.consultants = doctors;
-    });
-  }
+    if (umrNo) {
+      // Load patients and auto-select the matched one
+      this.patientService.getAllPatients().subscribe({
+        next: (patients) => {
+          this.allPatients = patients;
+          const matchedPatient = patients.find(p => p.umrNumber === umrNo);
+
+          if (matchedPatient) {
+            this.selectedPatient = matchedPatient;
+            this.dataSource = new MatTableDataSource<Patient>([matchedPatient]);
+
+            this.snackBar.open('✅ Registered patient pre-filled', 'Close', {
+              duration: 2000,
+              verticalPosition: 'top'
+            });
+          } else {
+            this.dataSource = new MatTableDataSource<Patient>([]);
+            this.snackBar.open('⚠️ Patient not found in the records', 'Close', {
+              duration: 3000,
+              verticalPosition: 'top'
+            });
+          }
+        },
+        error: () => {
+          this.snackBar.open('❌ Error loading patient records', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top'
+          });
+        }
+      });
+    } else {
+      // No patient in query params, load all empty
+      this.loadPatients();
+    }
+  });
+}
+
+
+
+ loadPatients() {
+  this.patientService.getAllPatients().subscribe({
+    next: (patients) => {
+      this.allPatients = patients;
+      this.dataSource = new MatTableDataSource<Patient>([]);
+      this.dataSource.filterPredicate = (data: Patient, filter: string) => {
+        return (data.umrNumber || '').toLowerCase() === filter.toLowerCase();
+      };
+    },
+    error: (error) => {
+      this.snackBar.open('Error loading patients', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top'
+      });
+    }
+  });
+}
+
+loadDoctors() {
+  this.doctorService.getAllDoctors().subscribe(doctors => {
+    this.consultants = doctors.map(doc => ({
+      ...doc,
+      nameOnly: doc.displayName?.split(' - ')[0] || doc.displayName || 'Unknown',
+      specialization: doc.specialization || 'N/A'
+    }));
+  });
+}
+
 
   applyFilter(event: Event) {
     const filterValue = (event.target as HTMLInputElement).value.trim().toLowerCase();
@@ -116,14 +165,16 @@ export class AppointmentBookingComponent implements OnInit {
     });
   }
 
-  onConsultantSelect(doctorId: number | null) {
-    const consultant = this.consultants.find(c => c.doctorId === doctorId) || null;
-    if (consultant) {
-      this.appointmentForm.get('specialization')?.setValue(consultant.specialization);
-    } else {
-      this.appointmentForm.get('specialization')?.setValue('');
-    }
+    onConsultantSelect(doctorId: number | null) {
+  const consultant = this.consultants.find(c => c.doctorId === doctorId) || null;
+  if (consultant) {
+    this.appointmentForm.get('specialization')?.setValue(consultant.specialization);
+  } else {
+    this.appointmentForm.get('specialization')?.setValue('');
   }
+}
+
+
 
   calculateTotal() {
     this.totalAmount = this.registrationFee + this.consultantFee;

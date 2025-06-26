@@ -37,7 +37,7 @@
         <div class="form-section">
           <mat-form-field appearance="outline" class="form-field">
             <mat-label>Date of Birth</mat-label>
-            <input matInput type="date" name="dob" ngModel />
+            <input matInput type="date" name="dob" ngModel (ngModelChange)="calculateAgeFromDOB($event, patientForm)" />
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="form-field">

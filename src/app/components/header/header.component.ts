@@ -42,7 +42,7 @@ export class HeaderComponent {
 
   navigateToAppointmentScheduling() {
     this.isServicesDropdownVisible = false;
-    this.router.navigate(['/appointment-scheduling']);
+    this.router.navigate(['/appointment-booking']);
   }
 
   navigateToBillingInsurance() {

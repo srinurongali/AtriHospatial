@@ -51,7 +51,7 @@
   max-width: 68%;
 }
 
-.full-width {
+.full-width {  
   flex: 1 1 100%;
 }
 
@@ -151,4 +151,109 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
   background-color: #0277bd;
+}
+
+/* === Modern Material Dropdown Design for Patient Registration (White Text) === */
+:host ::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: #00bcd4 !important;
+  border-width: 2px !important;
+  border-radius: 10px !important;
+  transition: border-color 0.3s;
+}
+
+:host ::ng-deep .mat-form-field-appearance-outline.mat-focused .mat-form-field-outline-thick {
+  color: #0288d1 !important;
+  border-color: #0288d1 !important;
+}
+
+:host ::ng-deep .mat-form-field-label {
+  color: #00bcd4 !important;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  font-size: 1.1em;
+}
+
+:host ::ng-deep .mat-select-trigger {
+  min-height: 40px;
+  display: flex;
+  align-items: center;
+  font-size: 1.1em;
+  font-weight: 500;
+  color: #fff !important;
+  background: #263544 !important;
+  border-radius: 8px;
+  padding: 0 12px;
+  transition: background 0.2s;
+}
+
+:host ::ng-deep .mat-select-trigger:hover {
+  background: #0288d1 !important;
+}
+
+:host ::ng-deep .mat-select-panel {
+  background: #263544 !important;
+  color: #fff !important;
+  border-radius: 12px !important;
+  box-shadow: 0 8px 32px rgba(2, 136, 209, 0.18), 0 1.5px 6px rgba(0,0,0,0.08);
+  margin-top: 6px !important;
+  padding: 6px 0;
+  z-index: 2000 !important;
+  animation: dropdownFadeIn 0.25s;
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateY(-10px);}
+  to { opacity: 1; transform: translateY(0);}
+}
+
+:host ::ng-deep .mat-option {
+  color: #fff !important;
+  font-size: 1.08em;
+  padding: 12px 24px;
+  border-radius: 6px;
+  margin: 2px 8px;
+  transition: background 0.2s, color 0.2s;
+}
+
+:host ::ng-deep .mat-option:hover,
+:host ::ng-deep .mat-active {
+  background: #0288d1 !important;
+  color: #fff !important;
+}
+
+:host ::ng-deep .mat-selected:not(.mat-option-disabled) {
+  background: #00bcd4 !important;
+  color: #fff !important;
+}
+
+:host ::ng-deep .mat-select-arrow {
+  color: #fff !important;
+  font-size: 1.3em;
+  transition: color 0.2s;
+}
+
+:host ::ng-deep .mat-select-panel .mat-option.mat-active {
+  background: #0288d1 !important;
+  color: #fff !important;
+}
+
+/* Force all dropdown options and selected values to have white text */
+:host ::ng-deep .mat-select-trigger {
+  color: #fff !important;
+}
+
+:host ::ng-deep .mat-select-value {
+  color: #fff !important;
+}
+
+:host ::ng-deep .mat-option {
+  color: #fff !important;
+}
+
+:host ::ng-deep .mat-option.mat-selected {
+  color: #fff !important;
+}
+
+:host ::ng-deep .mat-select-arrow {
+  color: #fff !important;
 }
