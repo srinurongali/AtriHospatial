@@ -1,1 +1,185 @@
-<p>standard-organization works!</p>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<div class="container-fluid">
+  <h4 class="mt-3 mb-3">Credit Organization</h4>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'list'" (click)="setTab('list')">Organization List</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" [class.active]="activeTab === 'new'" (click)="setTab('new')">New Organization</a>
+    </li>
+  </ul>
+  <div class="tab-content">
+    <div class="tab-pane" [class.active]="activeTab === 'list'" *ngIf="activeTab === 'list'">
+      <!-- Organization List Table -->
+      <table class="table table-bordered table-sm mt-3">
+        <thead>
+          <tr>
+            <th>Organization Code</th>
+            <th>Organization Type</th>
+            <th>Organization Name</th>
+            <th>Short Name</th>
+            <th>Credit Limit</th>
+            <th>Bill Clearance Days</th>
+            <th>Payment Method</th>
+        
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let org of organizations">
+            <td>{{ org.organizationCode }}</td>
+            <td>{{ org.organizationType }}</td>
+            <td>{{ org.organizationName }}</td>
+            <td>{{ org.shortname }}</td>
+            <td>{{ org.creditLimit }}</td>
+            <td>{{ org.billClearanceDays }}</td>
+            <td>{{ org.payMethod }}</td>
+            
+            <td>
+              <button class="btn btn-sm btn-info" (click)="viewOrg(org)">👁️</button>
+              <button class="btn btn-sm btn-danger" (click)="deleteOrg(org)">🗑️</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tab-pane" [class.active]="activeTab === 'new'" *ngIf="activeTab === 'new'">
+      <!-- New Organization Form -->
+      <form [formGroup]="orgForm" (ngSubmit)="onSubmit()" class="mt-3">
+        <!-- Organization Details -->
+        <div class="card mb-3">
+          <div class="card-header">Organization Details</div>
+          <div class="card-body row">
+            <div class="form-group col-md-3">
+              <label>Organization Code</label>
+              <input class="form-control" formControlName="organizationCode" />
+            </div>
+            
+            <div class="form-group col-md-3">
+              <label>Organization Name</label>
+              <input class="form-control" formControlName="organizationName" />
+            </div>
+            <div class="form-group col-md-3">
+              <label>Short Name</label>
+              <input class="form-control" formControlName="shortname" />
+            </div>
+            <div class="form-group col-md-3">
+              <label>Credit Limit</label>
+              <input class="form-control" formControlName="creditLimit" />
+            </div>
+            <div class="form-group col-md-3">
+              <label>Bill Clearance Days</label>
+              <input class="form-control" formControlName="billClearanceDays" />
+            </div>
+            <div class="form-group col-md-3">
+              <label>Payment Method</label>
+              <select class="form-control" formControlName="payMethod">
+                <option value="">--Select Payment Method--</option>
+                <option *ngFor="let m of paymentMethods" [value]="m">{{ m }}</option>
+              </select>
+            </div>
+           
+          </div>
+        </div>
+        <!-- Address Details -->
+        <div class="card mb-3">
+          <div class="card-header">Address Details</div>
+          <div class="card-body row">
+            <div class="form-group col-md-4">
+              <label>Address</label>
+              <input class="form-control" formControlName="address" />
+            </div>
+            <div class="form-group col-md-2">
+              <label>Country</label>
+              <select class="form-control" formControlName="country">
+                <option value="">--Select Country--</option>
+                <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label>State</label>
+              <select class="form-control" formControlName="state">
+                <option value="">--Select State--</option>
+                <option *ngFor="let s of states" [value]="s">{{ s }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label>City</label>
+              <input class="form-control" formControlName="city" />
+            </div>
+            <div class="form-group col-md-2">
+              <label>Website</label>
+              <input class="form-control" formControlName="website" />
+            </div>
+            <div class="form-group col-md-2">
+              <label>Mobile No</label>
+              <input class="form-control" formControlName="organizationMobile" />
+            </div>
+          </div>
+        </div>
+        <!-- Contact Details -->
+        <div class="card mb-3">
+          <div class="card-header">Contact Details</div>
+          <div class="card-body row">
+            <div class="form-group col-md-2">
+              <label>Contact Type</label>
+              <select class="form-control" formControlName="contactType">
+                <option value="">--Select Contact Type--</option>
+                <option *ngFor="let ct of contactTypes" [value]="ct">{{ ct }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-2">
+              <label>Contact Person Name</label>
+              <input class="form-control" formControlName="contactPersonName" />
+            </div>
+            <div class="form-group col-md-2">
+              <label>Designation</label>
+              <input class="form-control" formControlName="designation" />
+            </div>
+            <div class="form-group col-md-2">
+              <label>Department</label>
+              <input class="form-control" formControlName="department" />
+            </div>
+            <div class="form-group col-md-2">
+              <label>Email</label>
+              <input class="form-control" formControlName="email" />
+            </div>
+            <div class="form-group col-md-2">
+              <label>Mobile No</label>
+              <input class="form-control" formControlName="mobNum" />
+            </div>
+            <div class="form-group col-md-1 d-flex align-items-end">
+              <button type="button" class="btn btn-primary" (click)="addContact()">+</button>
+            </div>
+          </div>
+        </div>
+        <!-- Organization Priorities -->
+        <div class="card mb-3">
+          <div class="card-header">Organization Priorities</div>
+          <div class="card-body row">
+            <div class="form-group col-md-2">
+              <label>Priority</label>
+              <select class="form-control" formControlName="priority">
+                <option value="">--Select Priority--</option>
+                <option *ngFor="let p of priorities" [value]="p">{{ p }}</option>
+              </select>
+            </div>
+            <div class="form-group col-md-3">
+              <label>Tariff Name</label>
+              <input class="form-control" formControlName="tariffName" />
+            </div>
+            <div class="form-group col-md-3">
+              <label>Tariff Code</label>
+              <input class="form-control" formControlName="tariffCode" />
+            </div>
+            <div class="form-group col-md-1 d-flex align-items-end">
+              <button type="button" class="btn btn-primary" (click)="addPriority()">+</button>
+            </div>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+      </form>
+    </div>
+  </div>
+</div>

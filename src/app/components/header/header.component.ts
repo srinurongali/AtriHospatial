@@ -55,6 +55,16 @@ export class HeaderComponent {
     this.router.navigate(['/reports-analytics']);
   }
 
+  navigateToStandardTariff() {
+    this.isSetupsDropdownVisible = false;
+    this.router.navigate(['/standard-tariff']);
+  }
+
+  navigateToOrganizationSetup() {
+    this.isSetupsDropdownVisible = false;
+    this.router.navigate(['/standard-organization']);
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent) {
     const target = event.target as HTMLElement;

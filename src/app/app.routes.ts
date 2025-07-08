@@ -4,6 +4,8 @@ import { StandardProcedureComponentsComponent } from './components/standard-proc
 import { PatientRegistrationComponent } from './components/patient-registration/patient-registration.component';
 import { AppointmentBookingComponent } from './components/appointment-booking/appointment-booking.component';
 import { PaymentTypeComponent } from './components/payment-type/payment-type.component';
+import { StandardTariffComponent } from './components/standard-tariff/standard-tariff.component';
+import { StandardOrganizationComponent } from './components/standard-organization/standard-organization.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'patient-registration', pathMatch: 'full' },
@@ -16,7 +18,9 @@ export const routes: Routes = [
 
   // Master data setup
   { path: 'standard-allergy', component: StandardAllergyComponent },
+  { path: 'standard-tariff', component: StandardTariffComponent },
   { path: 'standard-procedure', component: StandardProcedureComponentsComponent },
+  {path : 'standard-organization',component:StandardOrganizationComponent},
 
   // Payment Type
   { path: 'payment', component: PaymentTypeComponent },

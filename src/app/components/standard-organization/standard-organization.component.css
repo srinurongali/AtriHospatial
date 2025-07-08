@@ -1,0 +1,62 @@
+/* Card header styling */
+.card-header {
+  font-weight: bold;
+  background: #e3f0fa;
+  border-bottom: 1px solid #b6d4ef;
+}
+
+/* Table styling for compact look */
+.table th, .table td {
+  vertical-align: middle !important;
+  font-size: 0.95rem;
+  padding: 0.4rem 0.6rem;
+}
+
+/* Form group spacing */
+.form-group label {
+  font-weight: 500;
+  margin-bottom: 0.2rem;
+}
+
+.form-group input,
+.form-group select {
+  font-size: 0.95rem;
+  height: 2rem;
+  padding: 0.2rem 0.5rem;
+}
+
+/* Section spacing */
+.card {
+  margin-bottom: 1rem;
+  border-radius: 0.3rem;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+}
+
+/* Button tweaks */
+.btn {
+  font-size: 0.95rem;
+  padding: 0.25rem 0.75rem;
+}
+
+.btn-primary, .btn-success {
+  border-radius: 0.2rem;
+}
+
+/* Tab nav styling */
+.nav-tabs .nav-link.active {
+  background-color: #e3f0fa;
+  border-color: #b6d4ef #b6d4ef #fff;
+  color: #007bff;
+  font-weight: 500;
+}
+
+/* Responsive tweaks */
+@media (max-width: 768px) {
+  .form-group {
+    margin-bottom: 0.8rem;
+  }
+  .card-body.row > .form-group {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}

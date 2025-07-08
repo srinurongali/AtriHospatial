@@ -65,35 +65,33 @@
   </div>
 
   <form [formGroup]="appointmentForm" (ngSubmit)="submit()">
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="fill">
       <mat-label>Location</mat-label>
       <mat-select formControlName="location">
         <mat-option *ngFor="let loc of locations" [value]="loc">{{ loc }}</mat-option>
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
+    <mat-form-field appearance="fill">
       <mat-label>Date</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
 
-    <mat-form-field appearance="outline">
-  <mat-label>Consultant Name</mat-label>
-  <mat-select formControlName="consultant" (selectionChange)="onConsultantSelect($event.value)">
-    <mat-option *ngFor="let consultant of consultants" [value]="consultant.doctorId">
-      {{ consultant.displayName }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Consultant Name</mat-label>
+      <mat-select formControlName="consultant" (selectionChange)="onConsultantSelect($event.value)">
+        <mat-option *ngFor="let consultant of consultants" [value]="consultant.doctorId">
+          {{ consultant.displayName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-<mat-form-field appearance="outline">
-  <mat-label>Specialization</mat-label>
-  <input matInput formControlName="specialization" readonly>
-</mat-form-field>
-
-
+    <mat-form-field appearance="fill">
+      <mat-label>Specialization</mat-label>
+      <input matInput formControlName="specialization" readonly>
+    </mat-form-field>
 
     <div class="fee-section">
       <h4>Fee Details</h4>

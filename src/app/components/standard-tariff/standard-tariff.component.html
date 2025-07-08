@@ -1,0 +1,140 @@
+<mat-tab-group [(selectedIndex)]="activeTabIndex">
+  <!-- Debug output (optional) -->
+  <pre>{{ tariffs | json }}</pre>
+
+  <!-- Tariff List Tab -->
+  <mat-tab label="Tariff List">
+    <mat-card>
+      <mat-card-title>Standard Tariffs</mat-card-title>
+
+      <div class="list-controls">
+        <mat-form-field appearance="fill" class="search-box">
+          <mat-label>Search</mat-label>
+          <input matInput [(ngModel)]="searchText" placeholder="Search tariffs">
+        </mat-form-field>
+
+        <mat-form-field appearance="fill" class="entries-dropdown">
+          <mat-label>Show entries</mat-label>
+          <mat-select [(value)]="itemsPerPage">
+            <mat-option [value]="10">10</mat-option>
+            <mat-option [value]="25">25</mat-option>
+            <mat-option [value]="50">50</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <table mat-table [dataSource]="pagedTariffs" class="mat-elevation-z1">
+        <!-- Empty state row -->
+        <tr *ngIf="pagedTariffs.length === 0">
+          <td colspan="6" style="text-align: center; padding: 20px;">
+            No tariffs found. Total tariffs: {{ tariffs.length }}
+          </td>
+        </tr>
+
+        <!-- Column Definitions -->
+        <ng-container matColumnDef="tariffCode">
+          <th mat-header-cell *matHeaderCellDef>Tariff Code</th>
+          <td mat-cell *matCellDef="let tariff">{{ tariff?.tariffCode || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="tariffName">
+          <th mat-header-cell *matHeaderCellDef>Tariff Name</th>
+          <td mat-cell *matCellDef="let tariff">{{ tariff?.tariffName || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="contactPerson">
+          <th mat-header-cell *matHeaderCellDef>Contact Person</th>
+          <td mat-cell *matCellDef="let tariff">{{ tariff?.contactPerson || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="validityFrom">
+          <th mat-header-cell *matHeaderCellDef>Validity From</th>
+          <td mat-cell *matCellDef="let tariff">{{ tariff?.validityFrom || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="validityTo">
+          <th mat-header-cell *matHeaderCellDef>Validity To</th>
+          <td mat-cell *matCellDef="let tariff">{{ tariff?.validityTo || 'N/A' }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Actions</th>
+          <td mat-cell *matCellDef="let tariff">
+            <div class="action-buttons">
+              <button mat-icon-button color="primary" (click)="viewTariff(tariff)" matTooltip="View">
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button mat-icon-button color="warn" (click)="deleteTariff(tariff)" matTooltip="Delete">
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button mat-icon-button color="primary" (click)="editTariff(tariff)" matTooltip="Edit">
+                <mat-icon>edit</mat-icon>
+              </button>
+            </div>
+          </td>
+        </ng-container>
+
+        <!-- Header & Row Bindings -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+      </table>
+
+      <div class="pagination-controls">
+        <span>{{ getPaginationRange() }}</span>
+        <div class="pagination-buttons">
+          <button mat-button (click)="previousPage()" [disabled]="currentPage === 1">Previous</button>
+          <button mat-button *ngFor="let page of pages" (click)="goToPage(page)"
+                  [color]="currentPage === page ? 'primary' : undefined">
+            {{ page }}
+          </button>
+          <button mat-button (click)="nextPage()" [disabled]="currentPage === totalPages">Next</button>
+        </div>
+      </div>
+    </mat-card>
+  </mat-tab>
+
+  <!-- Add Tariff Tab -->
+  <mat-tab label="Add Tariff">
+    <mat-card class="tariff-form-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon color="primary" style="vertical-align: middle;">add_circle</mat-icon>
+          Add New Tariff
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <form (ngSubmit)="onSubmit()" #tariffForm="ngForm" class="tariff-form">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tariff Code</mat-label>
+            <input matInput name="tariffCode" [(ngModel)]="newTariff.tariffCode" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Tariff Name</mat-label>
+            <input matInput name="tariffName" [(ngModel)]="newTariff.tariffName" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Contact Person</mat-label>
+            <input matInput name="contactPerson" [(ngModel)]="newTariff.contactPerson" required>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Validity From</mat-label>
+            <input matInput name="validityFrom" [(ngModel)]="newTariff.validityFrom" required type="date">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Validity To</mat-label>
+            <input matInput name="validityTo" [(ngModel)]="newTariff.validityTo" required type="date">
+          </mat-form-field>
+
+          <button mat-raised-button color="primary" type="submit" class="submit-btn">
+            <mat-icon>add</mat-icon>
+            Add Tariff
+          </button>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </mat-tab>
+</mat-tab-group>
