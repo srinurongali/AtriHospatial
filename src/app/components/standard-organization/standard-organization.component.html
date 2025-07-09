@@ -37,7 +37,8 @@
             <td>{{ org.billClearanceDays }}</td>
             <td>{{ org.payMethod }}</td>
             <td>
-              <button class="btn btn-sm btn-info" (click)="viewOrg(org)">👁️</button>
+              <button class="btn btn-sm btn-info mr-1" (click)="viewOrg(org)">👁️</button>
+              <button class="btn btn-sm btn-primary mr-1" (click)="editOrgFromList(org)">✏️</button>
               <button class="btn btn-sm btn-danger" (click)="deleteOrg(org)">🗑️</button>
             </td>
           </tr>
@@ -192,7 +193,8 @@
             </div>
           </div>
         </div>
-        <button type="submit" class="btn btn-success">Save</button>
+        <button type="button" class="btn btn-primary" *ngIf="viewMode && !editMode" (click)="editOrg()">Edit</button>
+        <button type="submit" class="btn btn-success" *ngIf="editMode">Save</button>
       </form>
     </div>
   </div>

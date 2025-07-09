@@ -50,6 +50,8 @@ export class StandardOrganizationComponent implements OnInit {
   priorities: string[] = ['1', '2', '3', '4'];
   paymentMethods: string[] = ['Cash', 'Credit Card', 'Bank Transfer', 'Cheque'];
   countries: string[] = ['India', 'USA', 'Canada', 'Australia'];
+  viewMode: boolean = false;
+  editMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -97,6 +99,12 @@ export class StandardOrganizationComponent implements OnInit {
 
   setTab(tab: string) {
     this.activeTab = tab;
+    if (tab === 'new') {
+      this.viewMode = false;
+      this.editMode = true; // New is always editable
+      this.orgForm.reset();
+      this.orgForm.enable();
+    }
   }
 
   loadOrganizations(): void {
@@ -210,7 +218,24 @@ export class StandardOrganizationComponent implements OnInit {
   }
 
   viewOrg(org: Organization): void {
-    // TODO: Implement view logic (e.g., open modal or set form values for viewing)
-    this.snackBar.open(`Viewing organization: ${org.organizationName}`, 'Close', { duration: 2000, verticalPosition: 'top' });
+    this.setTab('new');
+    this.orgForm.patchValue(org);
+    this.viewMode = true;
+    this.editMode = false;
+    this.orgForm.disable(); // Read-only
+  }
+
+  editOrg() {
+    this.editMode = true;
+    this.viewMode = false;
+    this.orgForm.enable(); // Editable
+  }
+
+  editOrgFromList(org: Organization): void {
+    this.setTab('new');
+    this.orgForm.patchValue(org);
+    this.editMode = true;
+    this.viewMode = false;
+    this.orgForm.enable(); // Editable
   }
 }
