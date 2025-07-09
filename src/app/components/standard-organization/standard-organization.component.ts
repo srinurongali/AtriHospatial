@@ -12,6 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { OrganizationService, Organization } from '../../services/organization.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-standard-organization',
@@ -29,42 +30,26 @@ import { OrganizationService, Organization } from '../../services/organization.s
     MatTableModule,
     MatSnackBarModule,
     MatSelectModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   templateUrl: './standard-organization.component.html',
   styleUrls: ['./standard-organization.component.css']
 })
 export class StandardOrganizationComponent implements OnInit {
-  activeTab: string = 'list';
+  activeTab = 'list';
   orgForm!: FormGroup;
-  displayedColumns: string[] = [
-    'organizationCode', 'organizationType', 'organizationName', 'shortname', 'creditLimit', 'billClearanceDays', 'payMethod', 'actions'
-  ];
+  displayedColumns: string[] = ['organizationCode', 'organizationType', 'organizationName', 'shortname', 'creditLimit', 'billClearanceDays', 'payMethod', 'actions'];
   organizations: Organization[] = [];
-
   searchText: string = '';
-  itemsPerPage: number = 10;
   currentPage: number = 1;
-
-  isEditMode: boolean = false;
-  priorities: string[] = ["1","2","3","4"];
-  paymentMethods: string[] = ['Cash', 'Credit Card', 'Insurance', 'Bank Transfer'];
-  countries: string[] = ['India', 'USA', 'Canada', 'Australia'];
+  itemsPerPage: number = 10;
+  tariffs: any[] = [];
   states: string[] = ['Maharashtra', 'California', 'Ontario', 'New South Wales'];
   contactTypes: string[] = ['Primary', 'Secondary', 'Billing', 'Technical'];
-  orgTypes: string[] = [];
-
-  viewOrg(org: Organization): void {
-    // TODO: Implement view logic
-  }
-
-  addContact(): void {
-    // TODO: Implement contact addition logic
-  }
-
-  addPriority(): void {
-    // TODO: Implement priority addition logic
-  }
+  priorities: string[] = ['1', '2', '3', '4'];
+  paymentMethods: string[] = ['Cash', 'Credit Card', 'Bank Transfer', 'Cheque'];
+  countries: string[] = ['India', 'USA', 'Canada', 'Australia'];
 
   constructor(
     private fb: FormBuilder,
@@ -74,10 +59,11 @@ export class StandardOrganizationComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadOrganizations();
+    this.loadTariffs();
     this.orgForm = this.fb.group({
-      organizationCode: ['', Validators.required],
-      organizationType: ['', Validators.required],
-      organizationName: ['', Validators.required],
+      organizationCode: [''],
+      organizationType: [''],
+      organizationName: [''],
       shortname: [''],
       creditLimit: [''],
       billClearanceDays: [''],
@@ -93,11 +79,20 @@ export class StandardOrganizationComponent implements OnInit {
       department: [''],
       email: [''],
       mobNum: [''],
-      contactType: [''],
       tariffCode: [''],
+      contactType: [''],
       priority: [''],
       tariffName: ['']
     });
+  }
+
+  loadTariffs(): void {
+    // Replace this mock data with API call if available
+    this.tariffs = [
+      { tariffCode: 'TARIFF015', tariffName: 'atri' },
+      { tariffCode: 'TARIFF016', tariffName: 'vip' },
+      { tariffCode: 'TARIFF017', tariffName: 'govt' }
+    ];
   }
 
   setTab(tab: string) {
@@ -110,26 +105,34 @@ export class StandardOrganizationComponent implements OnInit {
         this.organizations = data;
       },
       error: () => {
-        this.snackBar.open('⚠️ Failed to load organizations', 'Close', { duration: 3000 });
+        this.snackBar.open('⚠️ Failed to load organizations', 'Close', { duration: 3000, verticalPosition: 'top' });
       }
     });
   }
 
-  get pagedOrganizations(): Organization[] {
-    const filtered = this.organizations.filter(org =>
-      org.organizationName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      org.organizationCode?.toLowerCase().includes(this.searchText.toLowerCase())
-    );
+  get filteredOrganizations(): Organization[] {
+    let filtered = this.organizations;
+    if (this.searchText) {
+      const search = this.searchText.toLowerCase();
+      filtered = filtered.filter(org =>
+        org.organizationName?.toLowerCase().includes(search) ||
+        org.organizationCode?.toLowerCase().includes(search)
+      );
+    }
     const start = (this.currentPage - 1) * this.itemsPerPage;
     return filtered.slice(start, start + this.itemsPerPage);
   }
 
   get totalPages(): number {
-    const totalFiltered = this.organizations.filter(org =>
-      org.organizationName?.toLowerCase().includes(this.searchText.toLowerCase()) ||
-      org.organizationCode?.toLowerCase().includes(this.searchText.toLowerCase())
-    ).length;
-    return Math.ceil(totalFiltered / this.itemsPerPage);
+    let filtered = this.organizations;
+    if (this.searchText) {
+      const search = this.searchText.toLowerCase();
+      filtered = filtered.filter(org =>
+        org.organizationName?.toLowerCase().includes(search) ||
+        org.organizationCode?.toLowerCase().includes(search)
+      );
+    }
+    return Math.ceil(filtered.length / this.itemsPerPage) || 1;
   }
 
   get pages(): number[] {
@@ -138,27 +141,26 @@ export class StandardOrganizationComponent implements OnInit {
 
   onSubmit(): void {
     if (this.orgForm.invalid) {
-      this.snackBar.open('⚠️ Please fill in all required fields.', 'Close', { duration: 3000 });
+      this.snackBar.open('⚠️ Please fill in all required fields.', 'Close', { duration: 3000, verticalPosition: 'top' });
       return;
     }
 
     const formValue = this.orgForm.value;
     const newOrg: Organization = {
       ...formValue,
-      statusId: 1, // default active status
-      createdBy: 'admin', // set dynamically in backend or via login user
-      createdIp: '127.0.0.1' // optional; real value added by backend
+      statusId: 1,
+      createdBy: 'admin'
     };
 
     this.orgService.save(newOrg).subscribe({
-      next: () => {
-        this.snackBar.open('✅ Organization added successfully!', 'Close', { duration: 3000 });
+      next: (response) => {
+        this.snackBar.open(`✅ Saved! Tariff Name: ${response.tariffName}`, 'Close', { duration: 3000, verticalPosition: 'top' });
         this.orgForm.reset();
         this.setTab('list');
         this.loadOrganizations();
       },
       error: () => {
-        this.snackBar.open('❌ Failed to add organization.', 'Close', { duration: 3000 });
+        this.snackBar.open('❌ Failed to save organization.', 'Close', { duration: 3000, verticalPosition: 'top' });
       }
     });
   }
@@ -171,11 +173,11 @@ export class StandardOrganizationComponent implements OnInit {
 
     this.orgService.delete(org.organizationCode).subscribe({
       next: () => {
-        this.snackBar.open('✅ Organization deleted.', 'Close', { duration: 3000 });
+        this.snackBar.open('✅ Organization deleted.', 'Close', { duration: 3000, verticalPosition: 'top' });
         this.loadOrganizations();
       },
       error: () => {
-        this.snackBar.open('❌ Failed to delete.', 'Close', { duration: 3000 });
+        this.snackBar.open('❌ Failed to delete.', 'Close', { duration: 3000, verticalPosition: 'top' });
       }
     });
   }
@@ -197,5 +199,18 @@ export class StandardOrganizationComponent implements OnInit {
     const start = (this.currentPage - 1) * this.itemsPerPage + 1;
     const end = Math.min(start + this.itemsPerPage - 1, total);
     return `Showing ${start} to ${end} of ${total} entries`;
+  }
+
+  addContact(): void {
+    // TODO: Implement contact addition logic
+  }
+
+  addPriority(): void {
+    // TODO: Implement priority addition logic
+  }
+
+  viewOrg(org: Organization): void {
+    // TODO: Implement view logic (e.g., open modal or set form values for viewing)
+    this.snackBar.open(`Viewing organization: ${org.organizationName}`, 'Close', { duration: 2000, verticalPosition: 'top' });
   }
 }

@@ -11,6 +11,8 @@
   </ul>
   <div class="tab-content">
     <div class="tab-pane" [class.active]="activeTab === 'list'" *ngIf="activeTab === 'list'">
+      <!-- Search Box -->
+      <input type="text" [(ngModel)]="searchText" placeholder="Search organizations..." class="form-control mb-2" />
       <!-- Organization List Table -->
       <table class="table table-bordered table-sm mt-3">
         <thead>
@@ -22,12 +24,11 @@
             <th>Credit Limit</th>
             <th>Bill Clearance Days</th>
             <th>Payment Method</th>
-        
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let org of organizations">
+          <tr *ngFor="let org of filteredOrganizations">
             <td>{{ org.organizationCode }}</td>
             <td>{{ org.organizationType }}</td>
             <td>{{ org.organizationName }}</td>
@@ -35,7 +36,6 @@
             <td>{{ org.creditLimit }}</td>
             <td>{{ org.billClearanceDays }}</td>
             <td>{{ org.payMethod }}</td>
-            
             <td>
               <button class="btn btn-sm btn-info" (click)="viewOrg(org)">👁️</button>
               <button class="btn btn-sm btn-danger" (click)="deleteOrg(org)">🗑️</button>
@@ -43,6 +43,20 @@
           </tr>
         </tbody>
       </table>
+      <!-- Pagination Controls -->
+      <nav *ngIf="totalPages > 1">
+        <ul class="pagination">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" (click)="previousPage()">Previous</a>
+          </li>
+          <li class="page-item" *ngFor="let page of [].constructor(totalPages); let i = index" [class.active]="currentPage === (i + 1)">
+            <a class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" (click)="nextPage()">Next</a>
+          </li>
+        </ul>
+      </nav>
     </div>
     <div class="tab-pane" [class.active]="activeTab === 'new'" *ngIf="activeTab === 'new'">
       <!-- New Organization Form -->
