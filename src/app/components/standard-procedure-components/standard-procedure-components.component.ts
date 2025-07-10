@@ -14,6 +14,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ProcedureService, Procedure } from '../../services/procedure.service';
 
@@ -41,6 +42,8 @@ export class StandardProcedureComponentsComponent implements OnInit {
   displayedColumns: string[] = ['name', 'code', 'actions'];
 
   procedures: Procedure[] = [];
+  editMode: boolean = false;
+  selectedProcedure: Procedure | null = null;
 
   searchText: string = '';
   itemsPerPage: number = 10;
@@ -50,13 +53,16 @@ export class StandardProcedureComponentsComponent implements OnInit {
     procedureName: '',
     procedureCode: '',
     statusId: 1,
-    addedBy: 'admin',
-    addedIp: '192.168.1.163',  
-    addedOn: new Date()
+    createdBy: 'admin',
+    createdIp: '192.168.1.163',  
+    createdOn: new Date()
   };
 
   // Replace with actual service injection
-  constructor(private procedureService: ProcedureService) { }
+  constructor(
+    private procedureService: ProcedureService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
     console.log('Procedure Component initialized');
@@ -65,29 +71,12 @@ export class StandardProcedureComponentsComponent implements OnInit {
 
   loadProcedures(): void {
     console.log('Loading procedures...');
-    this.procedureService.getProcedures().pipe(
-      tap(data => {
-        console.log('Raw procedures data received:', JSON.stringify(data, null, 2));
-        this.procedures = data.map((item: any) => ({
-          procedureName: item.procedureName || item.name || item.procedure_name || '',
-          procedureCode: item.procedureCode || item.code || item.procedure_code || '',
-          procedureId: item.procedureId || item.id || item.procedure_id,
-          statusId: item.statusId,
-          addedBy: item.addedBy || item.added_by,
-          addedIp: item.addedIp || item.added_ip,
-          addedOn: item.addedOn || item.added_on ? new Date(item.addedOn || item.added_on) : undefined
-        }));
-        console.log('Normalized procedures:', JSON.stringify(this.procedures, null, 2));
-        console.log('Procedures array length:', this.procedures.length);
-      })
-    ).subscribe({
-      next: () => {
-        console.log('Procedures loaded successfully');
-      },
-      error: (error) => {
-        console.error('Error loading procedures:', error);
-        this.procedures = [];
-      }
+    this.procedureService.getAll().subscribe((data: Procedure[]) => {
+      this.procedures = data;
+      console.log('Procedures loaded successfully');
+    }, (error) => {
+      console.error('Error loading procedures:', error);
+      this.procedures = [];
     });
   }
 
@@ -123,53 +112,33 @@ export class StandardProcedureComponentsComponent implements OnInit {
     alert(`Viewing: ${JSON.stringify(procedure, null, 2)}`);
   }
 
-  deleteProcedure(procedure: Procedure): void {
-    const confirmed = confirm(`Delete procedure "${procedure?.procedureName || 'N/A'}"?`);
-    if (confirmed) {
-      const identifier = procedure?.procedureId || procedure?.procedureCode;
-      if (identifier) {
-        this.procedureService.deleteProcedure(identifier).subscribe({
-          next: () => {
-            console.log('Procedure deleted successfully:', JSON.stringify(procedure, null, 2));
-            this.loadProcedures();
-          },
-          error: (error) => {
-            console.error('Error deleting procedure:', error);
-            alert('Failed to delete procedure. Check console for details.');
-          }
-        });
-      } else {
-        console.error('Procedure has no valid identifier (procedureId or procedureCode) for deletion:', JSON.stringify(procedure, null, 2));
-        alert('Cannot delete procedure: Missing identifier.');
-      }
-    }
-  }
-
   onSubmit(): void {
-    console.log('Submitting new procedure:', JSON.stringify(this.newProcedure, null, 2));
-    if (this.newProcedure.procedureName && this.newProcedure.procedureCode) {
-      this.procedureService.addProcedure(this.newProcedure as Procedure).subscribe({
-        next: (addedProcedure) => {
-          console.log('Procedure added successfully:', JSON.stringify(addedProcedure, null, 2));
-          this.loadProcedures();
-          this.newProcedure = {
-              procedureName: '',
-              procedureCode: '',
-              statusId: 1,
-              addedBy: 'admin',
-              addedIp: '192.168.1.163',
-              addedOn: new Date()
-          };
-          this.activeTabIndex = 0;
-        },
-        error: (error) => {
-          console.error('Error adding procedure:', error);
-          alert('Failed to add procedure. Check console for details.');
-        }
-      });
-    } else {
-      console.log('Form validation failed. Required fields missing.');
+    if (!this.newProcedure.procedureName || !this.newProcedure.procedureCode) {
+      alert('Please fill all required fields.');
+      return;
     }
+    this.procedureService.save(this.newProcedure).subscribe(() => {
+      this.loadProcedures();
+      this.snackBar.open('Procedure added successfully!', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top'
+      });
+      // Reset the form fields
+      this.newProcedure = {
+        procedureName: '',
+        procedureCode: '',
+        statusId: 1,
+        createdBy: 'admin',
+        createdIp: '192.168.1.163',
+        createdOn: new Date()
+      };
+    }, (error) => {
+      console.error('Error adding procedure:', error);
+      this.snackBar.open('Failed to add procedure. Check console for details.', 'Close', {
+        duration: 3000,
+        verticalPosition: 'top'
+      });
+    });
   }
 
   previousPage(): void {
@@ -189,5 +158,28 @@ export class StandardProcedureComponentsComponent implements OnInit {
     const start = (this.currentPage - 1) * this.itemsPerPage + 1;
     const end = Math.min(start + this.itemsPerPage - 1, total);
     return `Showing ${start} to ${end} of ${total} entries`;
+  }
+
+  editProcedure(proc: Procedure): void {
+    this.editMode = true;
+    this.selectedProcedure = proc;
+  }
+
+  cancelEdit(): void {
+    this.editMode = false;
+    this.selectedProcedure = null;
+  }
+
+  deleteProcedure(proc: Procedure): void {
+    const confirmed = confirm(`Delete procedure "${proc?.procedureName || 'N/A'}"?`);
+    if (confirmed) {
+      this.procedureService.delete(proc.procedureCode).subscribe(() => {
+        console.log('Procedure deleted successfully:', JSON.stringify(proc, null, 2));
+        this.loadProcedures();
+      }, (error) => {
+        console.error('Error deleting procedure:', error);
+        alert('Failed to delete procedure. Check console for details.');
+      });
+    }
   }
 } 

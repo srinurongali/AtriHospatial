@@ -46,7 +46,16 @@ export class OrganizationService {
   }
 
   save(org: Organization): Observable<Organization> {
-    return this.http.post<Organization>(`${this.baseUrl}/save`, org);
+    // Check if it's an update (has existing organizationCode)
+    if (org.organizationCode) {
+      return this.http.put<Organization>(`${this.baseUrl}/update`, org);
+    } else {
+      return this.http.post<Organization>(`${this.baseUrl}/save`, org);
+    }
+  }
+
+  update(org: Organization): Observable<Organization> {
+    return this.http.put<Organization>(`${this.baseUrl}/update`, org);
   }
 
   delete(organizationCode: string): Observable<any> {
