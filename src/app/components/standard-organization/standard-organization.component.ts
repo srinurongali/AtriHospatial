@@ -13,6 +13,8 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
 import { OrganizationService, Organization } from '../../services/organization.service';
 import { HttpClientModule } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../patient-registration/confirm-dialog.component';
 
 @Component({
   selector: 'app-standard-organization',
@@ -56,7 +58,8 @@ export class StandardOrganizationComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private snackBar: MatSnackBar,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -175,17 +178,23 @@ export class StandardOrganizationComponent implements OnInit {
 
   deleteOrg(org: Organization): void {
     if (!org.organizationCode) return;
-
-    const confirmDelete = confirm(`Are you sure you want to delete "${org.organizationName}"?`);
-    if (!confirmDelete) return;
-
-    this.orgService.delete(org.organizationCode).subscribe({
-      next: () => {
-        this.snackBar.open('✅ Organization deleted.', 'Close', { duration: 3000, verticalPosition: 'top' });
-        this.loadOrganizations();
-      },
-      error: () => {
-        this.snackBar.open('❌ Failed to delete.', 'Close', { duration: 3000, verticalPosition: 'top' });
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirm Delete',
+        message: 'Are you sure you want to delete?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.orgService.delete(org.organizationCode).subscribe({
+          next: () => {
+            this.snackBar.open('✅ Organization deleted.', 'Close', { duration: 3000, verticalPosition: 'top' });
+            this.loadOrganizations();
+          },
+          error: () => {
+            this.snackBar.open('❌ Failed to delete.', 'Close', { duration: 3000, verticalPosition: 'top' });
+          }
+        });
       }
     });
   }

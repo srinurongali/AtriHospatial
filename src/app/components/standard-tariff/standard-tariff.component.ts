@@ -11,6 +11,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatSelectModule } from '@angular/material/select';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../patient-registration/confirm-dialog.component';
 import { TariffService, Tariff } from '../../services/tariff.service';
 
 @Component({
@@ -54,7 +56,7 @@ export class StandardTariffComponent implements OnInit {
     createdOn: new Date()
   };
 
-  constructor(private snackBar: MatSnackBar, private tariffService: TariffService) {}
+  constructor(private snackBar: MatSnackBar, private tariffService: TariffService, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.loadTariffs();
@@ -178,15 +180,24 @@ export class StandardTariffComponent implements OnInit {
   }
 
   deleteTariff(tariff: Tariff): void {
-    if (!tariff?.tariffCode || !confirm(`Delete "${tariff.tariffName}"?`)) return;
-
-    this.tariffService.delete(tariff.tariffCode).subscribe({
-      next: () => {
-        this.snackBar.open('✅ Tariff deleted successfully.', 'Close', { duration: 3000 });
-        this.loadTariffs();
-      },
-      error: () => {
-        this.snackBar.open('❌ Delete failed.', 'Close', { duration: 3000 });
+    if (!tariff?.tariffCode) return;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirm Delete',
+        message: 'Are you sure you want to delete?'
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.tariffService.delete(tariff.tariffCode).subscribe({
+          next: () => {
+            this.snackBar.open('✅ Tariff deleted successfully.', 'Close', { duration: 3000 });
+            this.loadTariffs();
+          },
+          error: () => {
+            this.snackBar.open('❌ Delete failed.', 'Close', { duration: 3000 });
+          }
+        });
       }
     });
   }

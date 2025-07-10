@@ -15,6 +15,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../patient-registration/confirm-dialog.component';
 
 @Component({
   selector: 'app-standard-allergy',
@@ -59,7 +61,8 @@ export class StandardAllergyComponent implements OnInit {
 
   constructor(
     private allergyService: AllergyService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -213,30 +216,37 @@ export class StandardAllergyComponent implements OnInit {
     return `Showing ${start} to ${end} of ${total} entries`;
   }
 deleteAllergy(allergy: Allergy): void {
-  if (!allergy || !allergy.allergyId) {
-    this.snackBar.open('⚠️ Invalid allergy data.', 'Close', {
-      duration: 3000,
-      verticalPosition: 'top'
-    });
-    return;
-  }
+  const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+    data: {
+      title: 'Confirm Delete',
+      message: 'Are you sure you want to delete?'
+    }
+  });
+  dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      if (!allergy || !allergy.allergyId) {
+        this.snackBar.open('⚠️ Invalid allergy data.', 'Close', {
+          duration: 3000,
+          verticalPosition: 'top'
+        });
+        return;
+      }
 
-  const confirmDelete = confirm(`Are you sure you want to deactivate "${allergy.allergyName}"?`);
-  if (!confirmDelete) return;
-
-  this.allergyService.deleteAllergy(allergy.allergyId).subscribe({
-    next: () => {
-      this.snackBar.open('✅ Allergy deactivated successfully.', 'Close', {
-        duration: 3000,
-        verticalPosition: 'top'
-      });
-      this.loadAllergies(); // ✅ refreshes the list
-    },
-    error: (error) => {
-      console.error('Error deactivating allergy:', error);
-      this.snackBar.open(`❌ Failed to deactivate allergy: ${error.message || error.statusText || 'Unknown error'}`, 'Close', {
-        duration: 5000,
-        verticalPosition: 'top'
+      this.allergyService.deleteAllergy(allergy.allergyId).subscribe({
+        next: () => {
+          this.snackBar.open('✅ Allergy deleted successfully!', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top'
+          });
+          this.loadAllergies(); // ✅ refreshes the list
+        },
+        error: (error) => {
+          console.error('Error deactivating allergy:', error);
+          this.snackBar.open(`❌ Failed to deactivate allergy: ${error.message || error.statusText || 'Unknown error'}`, 'Close', {
+            duration: 5000,
+            verticalPosition: 'top'
+          });
+        }
       });
     }
   });

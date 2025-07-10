@@ -15,6 +15,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatTableModule } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from '../patient-registration/confirm-dialog.component';
 
 import { ProcedureService, Procedure } from '../../services/procedure.service';
 
@@ -61,7 +63,8 @@ export class StandardProcedureComponentsComponent implements OnInit {
   // Replace with actual service injection
   constructor(
     private procedureService: ProcedureService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -109,7 +112,15 @@ export class StandardProcedureComponentsComponent implements OnInit {
   }
 
   viewProcedure(procedure: Procedure): void {
-    alert(`Viewing: ${JSON.stringify(procedure, null, 2)}`);
+    this.activeTabIndex = 1;
+    this.newProcedure = {
+      procedureName: procedure.procedureName,
+      procedureCode: procedure.procedureCode,
+      statusId: 1,
+      createdBy: 'admin',
+      createdIp: '192.168.1.163',
+      createdOn: new Date()
+    };
   }
 
   onSubmit(): void {
@@ -161,8 +172,17 @@ export class StandardProcedureComponentsComponent implements OnInit {
   }
 
   editProcedure(proc: Procedure): void {
+    this.newProcedure = {
+      procedureName: proc.procedureName,
+      procedureCode: proc.procedureCode,
+      statusId: 1,
+      createdBy: 'admin',
+      createdIp: '192.168.1.163',
+      createdOn: new Date()
+    };
     this.editMode = true;
     this.selectedProcedure = proc;
+    this.activeTabIndex = 1;
   }
 
   cancelEdit(): void {
@@ -171,15 +191,28 @@ export class StandardProcedureComponentsComponent implements OnInit {
   }
 
   deleteProcedure(proc: Procedure): void {
-    const confirmed = confirm(`Delete procedure "${proc?.procedureName || 'N/A'}"?`);
-    if (confirmed) {
-      this.procedureService.delete(proc.procedureCode).subscribe(() => {
-        console.log('Procedure deleted successfully:', JSON.stringify(proc, null, 2));
-        this.loadProcedures();
-      }, (error) => {
-        console.error('Error deleting procedure:', error);
-        alert('Failed to delete procedure. Check console for details.');
-      });
-    }
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Confirm Delete',
+        message: `Are you sure you want to delete the ${proc?.procedureName || 'selected'} record?`
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.procedureService.delete(proc.procedureCode).subscribe(() => {
+          this.loadProcedures();
+          this.snackBar.open('Procedure deleted successfully!', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top'
+          });
+        }, (error) => {
+          this.snackBar.open('Failed to delete procedure.', 'Close', {
+            duration: 3000,
+            verticalPosition: 'top'
+          });
+        });
+      }
+    });
   }
 } 
